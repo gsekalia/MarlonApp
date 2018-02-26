@@ -32,7 +32,7 @@ namespace MarlonApi.Controllers
             _context = context;
 
             if(_context.TodoItems.Count()==0){
-                _context.TodoItems.Add(new TodoStudent { Name = "Marlon Garcia",
+                _context.TodoItems.Add(new TodoStudent { Name = "Marloneeee Garcia",
                                                         Address = "10322 addison ave franklin park",
                                                         Email = "marlon@gmail.com",
                                                         PhoneNumber = "773-890-1234",
