@@ -13239,11 +13239,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\George\\Documents\\Web_API_MVC-master-master\\Web_API_MVC-master-master\\MarlonApi\\MarlonApi.csproj",
-      "projectName": "MarlonApi",
-      "projectPath": "C:\\Users\\George\\Documents\\Web_API_MVC-master-master\\Web_API_MVC-master-master\\MarlonApi\\MarlonApi.csproj",
+      "projectUniqueName": "C:\\Users\\George\\Documents\\Web_API_MVC-master-master\\Web_API_MVC-master-master\\MarlonApp\\MarlonApp.csproj",
+      "projectName": "MarlonApp",
+      "projectPath": "C:\\Users\\George\\Documents\\Web_API_MVC-master-master\\Web_API_MVC-master-master\\MarlonApp\\MarlonApp.csproj",
       "packagesPath": "C:\\Users\\George\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\George\\Documents\\Web_API_MVC-master-master\\Web_API_MVC-master-master\\MarlonApi\\obj\\",
+      "outputPath": "C:\\Users\\George\\Documents\\Web_API_MVC-master-master\\Web_API_MVC-master-master\\MarlonApp\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
