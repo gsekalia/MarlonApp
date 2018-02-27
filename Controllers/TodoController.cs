@@ -32,7 +32,8 @@ namespace MarlonApi.Controllers
             _context = context;
 
             if(_context.TodoItems.Count()==0){
-                _context.TodoItems.Add(new TodoStudent { Name = "Marloneeee Garcia",
+
+                TodoStudent stu = new TodoStudent {     Name = "Marlon Garcia",
                                                         Address = "10322 addison ave franklin park",
                                                         Email = "marlon@gmail.com",
                                                         PhoneNumber = "773-890-1234",
@@ -40,8 +41,12 @@ namespace MarlonApi.Controllers
                                                         BSEducationTitle = "Computer Science",
                                                         WorkExperienceCompanyNameOne = "FaceBook",
                                                         WorkExperienceTitleOne = "Developer",
-                                                        ExtraCurricularActivitiesOne = "Programming" });
+                                                        ExtraCurricularActivitiesOne = "Programming" };
+               // DatabaseInteraction.DatabaseInteraction dbObj = new MarlonApi.DatabaseInteraction.DatabaseInteraction();
+                //dbObj.CreateNewCandidate(stu);
+                _context.TodoItems.Add(stu);
                 _context.SaveChanges();
+
             }
 
         }
@@ -116,25 +121,25 @@ public IActionResult Create([FromBody] TodoStudent item)
 public IActionResult createStudentFromResume(string Name, string Address, string Email, string PhoneNumber, string BSEducationSchool, string BSEducationTitle, string MSEducationSchool, string MSEducationTitle, string PHdEducationSchool, string PHdEducationTitle, string WorkExperienceCompanyNameOne, string WorkExperienceTitleOne, string WorkExperienceCompanyNameTwo, string WorkExperienceTitleTwo, string WorkExperienceCompanyNameThree, string WorkExperienceTitleThree, string ExtraCurricularActivitiesOne, string ExtraCurricularActivitiesTwo)
 {
 
-    if(Name == null || Name.Equals("")){
+    //if(Name == null || Name.Equals("")){
 
-        return BadRequest();
-    }
+    //    return BadRequest();
+    //}
 
-    if(Address == null || Address.Equals("")){
+    //if(Address == null || Address.Equals("")){
 
-        return BadRequest();
-    }
+    //    return BadRequest();
+    //}
     
-    if(Email == null || Email.Equals("")){
+    //if(Email == null || Email.Equals("")){
   
-        return BadRequest();
-    }
+    //    return BadRequest();
+    //}
 
-     if(PhoneNumber == null || PhoneNumber.Equals("")){
+    // if(PhoneNumber == null || PhoneNumber.Equals("")){
   
-        return BadRequest();
-    }
+    //    return BadRequest();
+    //}
 
     string name = Name;
     string address = Address;
@@ -156,33 +161,34 @@ public IActionResult createStudentFromResume(string Name, string Address, string
     string extraCurricularActivitiesTwo = ExtraCurricularActivitiesTwo;
 
 
-    DatabaseInteraction.DatabaseInteraction dbObj = new MarlonApi.DatabaseInteraction.DatabaseInteraction();
-
-      email = dbObj.GetUserByName("dick");
+       DatabaseInteraction.DatabaseInteraction dbObj = new MarlonApi.DatabaseInteraction.DatabaseInteraction();
+      // dbObj.CreateNewCandidate(name, address, email);
+      // dbObj.PrintCollection();
 
     var student =  new TodoStudent {
-          Name = name,
-          Address = address, 
-          Email = email,
-          PhoneNumber = phoneNumber, 
-          BSEducationSchool = bsEducationSchool , 
-          BSEducationTitle = bsEducationTitle,
-          MSEducationSchool = msEducationSchool,
-          MSEducationTitle = msEducationTitle,
-          PHdEducationSchool = phdEducationSchool,
-          PHdEducationTitle = phdEducationTitle,
-          WorkExperienceCompanyNameOne = workExperienceCompanyNameOne,
-          WorkExperienceTitleOne = workExperienceTitleOne, 
-          WorkExperienceCompanyNameTwo = workExperienceCompanyNameTwo,
-          WorkExperienceTitleTwo = workExperienceTitleTwo,
+          Name                          = name,
+          Address                       = address, 
+          Email                         = email,
+          PhoneNumber                   = phoneNumber, 
+          BSEducationSchool             = bsEducationSchool , 
+          BSEducationTitle              = bsEducationTitle,
+          MSEducationSchool             = msEducationSchool,
+          MSEducationTitle              = msEducationTitle,
+          PHdEducationSchool            = phdEducationSchool,
+          PHdEducationTitle             = phdEducationTitle,
+          WorkExperienceCompanyNameOne  = workExperienceCompanyNameOne,
+          WorkExperienceTitleOne        = workExperienceTitleOne, 
+          WorkExperienceCompanyNameTwo  = workExperienceCompanyNameTwo,
+          WorkExperienceTitleTwo        = workExperienceTitleTwo,
           WorkExperienceCompanyNameThree = workExperienceCompanyNameThree,
-          WorkExperienceTitleThree = workExperienceTitleThree,
-          ExtraCurricularActivitiesOne = extraCurricularActivitiesOne,
-          ExtraCurricularActivitiesTwo = extraCurricularActivitiesTwo
+          WorkExperienceTitleThree      = workExperienceTitleThree,
+          ExtraCurricularActivitiesOne  = extraCurricularActivitiesOne,
+          ExtraCurricularActivitiesTwo  = extraCurricularActivitiesTwo
           };
-   
-    _context.TodoItems.Add(student);
-     _context.SaveChanges();
+
+            dbObj.CreateNewCandidate(student);
+            _context.TodoItems.Add(student);
+            _context.SaveChanges();
 
     return CreatedAtRoute("GetTodo", new { id = student.Id }, student);
 }
