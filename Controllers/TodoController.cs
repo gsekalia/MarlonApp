@@ -33,19 +33,6 @@ namespace MarlonApi.Controllers
 
             if(_context.TodoItems.Count()==0){
 
-                TodoStudent stu = new TodoStudent {     Name = "Marlon Garcia",
-                                                        Address = "10322 addison ave franklin park",
-                                                        Email = "marlon@gmail.com",
-                                                        PhoneNumber = "773-890-1234",
-                                                        BSEducationSchool = "Depaul University" ,
-                                                        BSEducationTitle = "Computer Science",
-                                                        WorkExperienceCompanyNameOne = "FaceBook",
-                                                        WorkExperienceTitleOne = "Developer",
-                                                        ExtraCurricularActivitiesOne = "Programming" };
-               // DatabaseInteraction.DatabaseInteraction dbObj = new MarlonApi.DatabaseInteraction.DatabaseInteraction();
-                //dbObj.CreateNewCandidate(stu);
-                _context.TodoItems.Add(stu);
-                _context.SaveChanges();
 
             }
 
@@ -100,101 +87,58 @@ public IActionResult Create([FromBody] TodoStudent item)
 /// Creates a student by passing student information in the parameters.
 /// </summary>
 /// <param name="Name"></param> 
-/// <param name="Address"></param>
-/// <param name="Email"></param>
 /// <param name="PhoneNumber"></param>
-/// <param name="BSEducationSchool"></param>
-/// <param name="BSEducationTitle"></param>
-/// <param name="MSEducationSchool"></param>
-/// <param name="MSEducationTitle"></param>
-/// <param name="PHdEducationSchool"></param>
-/// <param name="PHdEducationTitle"></param>
-/// <param name="WorkExperienceCompanyNameOne"></param>
-/// <param name="WorkExperienceTitleOne"></param>
-/// <param name="WorkExperienceCompanyNameTwo"></param>
-/// <param name="WorkExperienceTitleTwo"></param>
-/// <param name="WorkExperienceCompanyNameThree"></param>
-/// <param name="WorkExperienceTitleThree"></param>
-/// <param name="ExtraCurricularActivitiesOne"></param>
-/// <param name="ExtraCurricularActivitiesTwo"></param>
+/// <param name="Email"></param>
+/// <param name="Password"></param>
 [HttpPost("{Name}")]
-public IActionResult createStudentFromResume(string Name, string Address, string Email, string PhoneNumber, string BSEducationSchool, string BSEducationTitle, string MSEducationSchool, string MSEducationTitle, string PHdEducationSchool, string PHdEducationTitle, string WorkExperienceCompanyNameOne, string WorkExperienceTitleOne, string WorkExperienceCompanyNameTwo, string WorkExperienceTitleTwo, string WorkExperienceCompanyNameThree, string WorkExperienceTitleThree, string ExtraCurricularActivitiesOne, string ExtraCurricularActivitiesTwo)
+public IActionResult createStudentFromResume(string Name, string PhoneNumber, string Email, string Password)
 {
 
     //if(Name == null || Name.Equals("")){
-
+    //
     //    return BadRequest();
     //}
-
-    //if(Address == null || Address.Equals("")){
-
+    //
+    //if(Address == null || Address.Equals(""))
+    //{
     //    return BadRequest();
     //}
-    
-    //if(Email == null || Email.Equals("")){
-  
+    //
+    //if(Email == null || Email.Equals(""))
+    //{
+    //
     //    return BadRequest();
     //}
-
-    // if(PhoneNumber == null || PhoneNumber.Equals("")){
-  
+    //
+    // if(PhoneNumber == null || PhoneNumber.Equals(""))
+    //{
     //    return BadRequest();
     //}
 
     string name = Name;
-    string address = Address;
+    string phoneNumber= PhoneNumber;
     string email = Email;
-    string phoneNumber = PhoneNumber;
-    string bsEducationSchool = BSEducationSchool;
-    string bsEducationTitle = BSEducationTitle;
-    string msEducationSchool = MSEducationSchool;
-    string msEducationTitle = MSEducationTitle;
-    string phdEducationSchool = PHdEducationSchool;
-    string phdEducationTitle = PHdEducationTitle;
-    string workExperienceCompanyNameOne = WorkExperienceCompanyNameOne;
-    string workExperienceTitleOne = WorkExperienceTitleOne;
-    string workExperienceCompanyNameTwo = WorkExperienceCompanyNameTwo;
-    string workExperienceTitleTwo = WorkExperienceTitleTwo;
-    string workExperienceCompanyNameThree = WorkExperienceCompanyNameThree;
-    string workExperienceTitleThree = WorkExperienceTitleThree;
-    string extraCurricularActivitiesOne = ExtraCurricularActivitiesOne;
-    string extraCurricularActivitiesTwo = ExtraCurricularActivitiesTwo;
-
-
+    string password = Password;
        DatabaseInteraction.DatabaseInteraction dbObj = new MarlonApi.DatabaseInteraction.DatabaseInteraction();
       // dbObj.CreateNewCandidate(name, address, email);
       // dbObj.PrintCollection();
 
     var student =  new TodoStudent {
-          Name                          = name,
-          Address                       = address, 
-          Email                         = email,
-          PhoneNumber                   = phoneNumber, 
-          BSEducationSchool             = bsEducationSchool , 
-          BSEducationTitle              = bsEducationTitle,
-          MSEducationSchool             = msEducationSchool,
-          MSEducationTitle              = msEducationTitle,
-          PHdEducationSchool            = phdEducationSchool,
-          PHdEducationTitle             = phdEducationTitle,
-          WorkExperienceCompanyNameOne  = workExperienceCompanyNameOne,
-          WorkExperienceTitleOne        = workExperienceTitleOne, 
-          WorkExperienceCompanyNameTwo  = workExperienceCompanyNameTwo,
-          WorkExperienceTitleTwo        = workExperienceTitleTwo,
-          WorkExperienceCompanyNameThree = workExperienceCompanyNameThree,
-          WorkExperienceTitleThree      = workExperienceTitleThree,
-          ExtraCurricularActivitiesOne  = extraCurricularActivitiesOne,
-          ExtraCurricularActivitiesTwo  = extraCurricularActivitiesTwo
+          Name          = name,
+          PhoneNumber   = phoneNumber, 
+          Email         = email,
+          Password      = password 
           };
 
             dbObj.CreateNewCandidate(student);
-            _context.TodoItems.Add(student);
+            dbObj.PrintCollection();
+
+           // _context.TodoItems.Add(student);
+            _context.TodoItems.Add(dbObj.GetUserByName(name));
             _context.SaveChanges();
 
     return CreatedAtRoute("GetTodo", new { id = student.Id }, student);
 }
-
-
-
         /// <summary>
         /// Gets All Students Information
         /// </summary>
@@ -203,8 +147,7 @@ public IActionResult createStudentFromResume(string Name, string Address, string
         {
             return _context.TodoItems.ToList();
         }
-
-        
+     
         /// <summary>
         /// Gets a specific Student information.
         /// </summary>
@@ -241,24 +184,11 @@ public IActionResult Update(long id, [FromBody] TodoStudent item)
         return NotFound();
     }
 
-    todo.Name = item.Name;
-    todo.Address = item.Address;
-    todo.Email = item.Email;
-    todo.PhoneNumber = item.PhoneNumber;
-    todo.BSEducationSchool = item.BSEducationSchool;
-    todo.BSEducationTitle = item.BSEducationTitle;
-    todo.MSEducationSchool = item.MSEducationSchool;
-    todo.MSEducationTitle = item.MSEducationTitle;
-    todo.PHdEducationSchool = item.PHdEducationSchool;
-    todo.PHdEducationTitle = item.PHdEducationTitle;
-    todo.WorkExperienceCompanyNameOne = item.WorkExperienceCompanyNameOne;
-    todo.WorkExperienceTitleOne = item.WorkExperienceTitleOne;
-    todo.WorkExperienceCompanyNameTwo = item.WorkExperienceCompanyNameTwo;
-    todo.WorkExperienceTitleTwo = item.WorkExperienceTitleTwo;
-    todo.WorkExperienceCompanyNameThree = item.WorkExperienceCompanyNameThree;
-    todo.WorkExperienceTitleThree = item.WorkExperienceTitleThree;
-    todo.ExtraCurricularActivitiesOne = item.ExtraCurricularActivitiesOne;
-    todo.ExtraCurricularActivitiesTwo = item.ExtraCurricularActivitiesTwo;
+    todo.Name           = item.Name;
+    todo.PhoneNumber    = item.PhoneNumber;
+    todo.Email          = item.Email;
+    todo.Password       = item.Password;
+    
 
     _context.TodoItems.Update(todo);
     _context.SaveChanges();
@@ -303,8 +233,8 @@ public async Task<IActionResult> Post(List<IFormFile> files)
         }
     }
 
-    _context.TodoItems.Add(new TodoStudent { Name = "hotel", Address = "10322 asdasdas", Email = "marlon@gmail.com", PhoneNumber = "773-890-1234", BSEducationSchool = "Depaul University" , BSEducationTitle = "Computer Science", WorkExperienceCompanyNameOne = "FaceBook", WorkExperienceTitleOne = "Developer", ExtraCurricularActivitiesOne = "Programming" });
-     _context.SaveChanges();
+    // _context.TodoItems.Add(new TodoStudent { Name = "hotel", Address = "10322 asdasdas", Email = "marlon@gmail.com", PhoneNumber = "773-890-1234", BSEducationSchool = "Depaul University" , BSEducationTitle = "Computer Science", WorkExperienceCompanyNameOne = "FaceBook", WorkExperienceTitleOne = "Developer", ExtraCurricularActivitiesOne = "Programming" });
+    //_context.SaveChanges();
 
     // process uploaded files
     // Don't rely on or trust the FileName property without validation.

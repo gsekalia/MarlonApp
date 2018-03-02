@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-
 using MongoDB.Bson;
 using MongoDB.Driver;
 
@@ -57,14 +56,14 @@ namespace MarlonApi.DatabaseInteraction
                 {
                     foreach (var doc in cursor.Current)
                     {
-                        Console.WriteLine(doc.GetValue("Name"));
+                       Console.WriteLine(doc.GetValue("Name").ToString());
                     }
                 }
             }
         }
 
 
-        public String GetUserByName(String name)
+        public TodoStudent GetUserByName(String name)
         {
             var collection = this.db.GetCollection<BsonDocument>("candidate");
 
@@ -74,12 +73,17 @@ namespace MarlonApi.DatabaseInteraction
          
             String password = found.GetValue("Password").ToString();
             String email = found.GetValue("Email").ToString();
+            String phoneNumber = found.GetValue("PhoneNumber").ToString();
             //return new User(name, password, email);
 
             Console.WriteLine(name);
             Console.WriteLine(password);
             Console.WriteLine(email);
-            return email;
+            return new TodoStudent{ Name = name,
+                                    PhoneNumber = phoneNumber,
+                                    Email = email,
+                                    Password = password
+                                    };       
         }
 
         public void CreateNewCandidate(String name, String password, String email)
@@ -89,7 +93,7 @@ namespace MarlonApi.DatabaseInteraction
             var doc = new BsonDocument
             {
                 {"Name", name },
-                //{"Password", password },
+                {"Password", password },
                 {"Email", email }
             };
             collection.InsertOne(doc);
@@ -97,47 +101,21 @@ namespace MarlonApi.DatabaseInteraction
         public void CreateNewCandidate(TodoStudent stu)
         {
                                                                                                
-            if(stu.Name                           == null) stu.Name                             = "none";
-            if(stu.Address                        == null) stu.Address                          = "none";
-            if(stu.Email                          == null) stu.Email                            = "none";
-            if(stu.PhoneNumber                    == null) stu.PhoneNumber                      = "none";
-            if(stu.BSEducationSchool              == null) stu.BSEducationSchool                = "none";
-            if(stu.BSEducationTitle               == null) stu.BSEducationTitle                 = "none";
-            if(stu.MSEducationSchool              == null) stu.MSEducationSchool                = "none";
-            if(stu.MSEducationTitle               == null) stu.MSEducationTitle                 = "none";
-            if(stu.PHdEducationSchool             == null) stu.PHdEducationSchool               = "none";
-            if(stu.PHdEducationTitle              == null) stu.PHdEducationTitle                = "none";
-            if(stu.WorkExperienceCompanyNameOne   == null) stu.WorkExperienceCompanyNameOne     = "none";
-            if(stu.WorkExperienceTitleOne         == null) stu.WorkExperienceTitleOne           = "none";
-            if(stu.WorkExperienceCompanyNameTwo   == null) stu.WorkExperienceCompanyNameTwo     = "none";
-            if(stu.WorkExperienceTitleTwo         == null) stu.WorkExperienceTitleTwo           = "none";
-            if(stu.WorkExperienceCompanyNameThree == null) stu.WorkExperienceCompanyNameThree   = "none";
-            if(stu.WorkExperienceTitleThree       == null) stu.WorkExperienceTitleThree         = "none";
-            if(stu.ExtraCurricularActivitiesOne   == null) stu.ExtraCurricularActivitiesOne     = "none";
-            if(stu.ExtraCurricularActivitiesTwo   == null) stu.ExtraCurricularActivitiesTwo     = "none";
+            if(stu.Name         == null) stu.Name        = "none";
+            if(stu.PhoneNumber  == null) stu.PhoneNumber = "none";
+            if(stu.Email        == null) stu.Email       = "none";
+            if(stu.Password     == null) stu.Password    = "none";
+           
 
             var collection = db.GetCollection<BsonDocument>("candidate");
 
             var doc = new BsonDocument
             {                                                                               
-                {"Name"                         , stu.Name                            },
-                {"Address"                      , stu.Address                         },
-                {"Email"                        , stu.Email                           },
-                {"PhoneNumber"                  , stu.PhoneNumber                     },
-                {"BSEducationSchool"            , stu.BSEducationSchool               },
-                {"BSEducationTitle"             , stu.BSEducationTitle                },
-                {"MSEducationSchool"            , stu.MSEducationSchool               },
-                {"MSEducationTitle"             , stu.MSEducationTitle                },
-                {"PHdEducationSchool"           , stu.PHdEducationSchool              },
-                {"PHdEducationTitle"            , stu.PHdEducationTitle               },
-                {"WorkExperienceCompanyNameOne" , stu.WorkExperienceCompanyNameOne    },
-                {"WorkExperienceTitleOne"       , stu.WorkExperienceTitleOne          },
-                {"WorkExperienceCompanyNameTwo" , stu.WorkExperienceCompanyNameTwo    },
-                {"WorkExperienceTitleTwo"       , stu.WorkExperienceTitleTwo          },
-                {"WorkExperienceCompanyNameThree",stu.WorkExperienceCompanyNameThree  },
-                {"WorkExperienceTitleThree"     , stu.WorkExperienceTitleThree        },
-                {"ExtraCurricularActivitiesOne" , stu.ExtraCurricularActivitiesOne    },
-                { "ExtraCurricularActivitiesTwo", stu.ExtraCurricularActivitiesTwo    }
+                {"Name"         , stu.Name       },
+                {"PhoneNumber"  , stu.PhoneNumber},
+                {"Email"        , stu.Email      },
+                {"Password"     , stu.Password   }
+             
             };
             collection.InsertOne(doc);
         }
@@ -145,8 +123,6 @@ namespace MarlonApi.DatabaseInteraction
         public bool AuthenticateUserLogin(String name, String password)
         {
             var collection = db.GetCollection<BsonDocument>("candidate");
-
-           // var search = new BsonDocument("name", name);
 
             var search = new BsonDocument
             {
