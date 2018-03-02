@@ -86,6 +86,31 @@ namespace MarlonApi.DatabaseInteraction
                                     };       
         }
 
+        public TodoStudent GetUserByEmail(String email)
+        {
+            var collection = this.db.GetCollection<BsonDocument>("candidate");
+
+            var search = new BsonDocument("Email", email);
+            var found = collection.Find(search).First();
+
+
+            String password = found.GetValue("Password").ToString();
+            String name = found.GetValue("Name").ToString();
+            String phoneNumber = found.GetValue("PhoneNumber").ToString();
+            //return new User(email, password, email);
+
+            Console.WriteLine(email);
+            Console.WriteLine(password);
+            Console.WriteLine(email);
+            return new TodoStudent
+            {
+                Name        = name,
+                PhoneNumber = phoneNumber,
+                Email       = email,
+                Password    = password
+            };
+        }
+
         public void CreateNewCandidate(String name, String password, String email)
         {
             var collection = db.GetCollection<BsonDocument>("candidate");

@@ -58,11 +58,11 @@
             Gets All Students Information
             </summary>
         </member>
-        <member name="M:MarlonApi.Controllers.TodoController.GetById(System.Int64)">
+        <member name="M:MarlonApi.Controllers.TodoController.GetByEmail(System.String)">
             <summary>
             Gets a specific Student information.
             </summary>
-            <param name="id"></param> 
+            <param name="Email"></param> 
         </member>
         <member name="M:MarlonApi.Controllers.TodoController.Update(System.Int64,MarlonApi.Models.TodoStudent)">
             <summary>

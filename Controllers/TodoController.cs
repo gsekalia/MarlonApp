@@ -93,35 +93,11 @@ public IActionResult Create([FromBody] TodoStudent item)
 [HttpPost("{Name}")]
 public IActionResult createStudentFromResume(string Name, string PhoneNumber, string Email, string Password)
 {
-
-    //if(Name == null || Name.Equals("")){
-    //
-    //    return BadRequest();
-    //}
-    //
-    //if(Address == null || Address.Equals(""))
-    //{
-    //    return BadRequest();
-    //}
-    //
-    //if(Email == null || Email.Equals(""))
-    //{
-    //
-    //    return BadRequest();
-    //}
-    //
-    // if(PhoneNumber == null || PhoneNumber.Equals(""))
-    //{
-    //    return BadRequest();
-    //}
-
     string name = Name;
     string phoneNumber= PhoneNumber;
     string email = Email;
     string password = Password;
        DatabaseInteraction.DatabaseInteraction dbObj = new MarlonApi.DatabaseInteraction.DatabaseInteraction();
-      // dbObj.CreateNewCandidate(name, address, email);
-      // dbObj.PrintCollection();
 
     var student =  new TodoStudent {
           Name          = name,
@@ -148,29 +124,54 @@ public IActionResult createStudentFromResume(string Name, string PhoneNumber, st
             return _context.TodoItems.ToList();
         }
      
+        ///// <summary>
+        ///// Gets a specific Student information.
+        ///// </summary>
+        ///// <param name="id"></param> 
+        //[HttpGet("{id}", Name = "GetTodo")]
+        //public IActionResult GetById(long id)
+        //{
+        //    var item = _context.TodoItems.FirstOrDefault(t => t.Id == id);
+        //    if(item == null){
+                
+        //        return NotFound();
+        //    }
+
+        //    return new ObjectResult(item);
+        //}
+
         /// <summary>
         /// Gets a specific Student information.
         /// </summary>
-        /// <param name="id"></param> 
-        [HttpGet("{id}", Name = "GetTodo")]
-        public IActionResult GetById(long id)
+        /// <param name="Email"></param> 
+        [HttpGet("{Email}", Name = "GetTodo")]
+       //public IActionResult GetById(string Email)
+       public IActionResult GetByEmail(string Email)
         {
-            var item = _context.TodoItems.FirstOrDefault(t => t.Id == id);
-            if(item == null){
-                
-                return NotFound();
-            }
+            DatabaseInteraction.DatabaseInteraction dbObj = new MarlonApi.DatabaseInteraction.DatabaseInteraction();
 
-            return new ObjectResult(item);
+            TodoStudent user = dbObj.GetUserByEmail(Email);
+
+
+            //var item = _context.TodoItems.FirstOrDefault(t => t.Id == id);
+            //if (item == null)
+            //{
+
+            //    return NotFound();
+            //}
+
+           // return new ObjectResult(item);
+            return new ObjectResult(user);
+
         }
 
 
-/// <summary>
-/// Updates a specific Student.
-/// </summary>
-/// <param name="id"></param> 
-/// <param name="item"></param>
-[HttpPut("{id}")]
+        /// <summary>
+        /// Updates a specific Student.
+        /// </summary>
+        /// <param name="id"></param> 
+        /// <param name="item"></param>
+        [HttpPut("{id}")]
 public IActionResult Update(long id, [FromBody] TodoStudent item)
 {
     if (item == null || item.Id != id)
