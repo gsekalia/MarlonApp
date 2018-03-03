@@ -12,27 +12,19 @@ using MarlonApi.Models;
 
 namespace MarlonApi.FileReader
 {
-    class FileReader
+    static class FileReader
     {
 
-        //private String HOST = "mongodb://207.229.181.23:27017";
-        //private String DATABASENAME = "csc394";
-        //private MongoClient client;
-        //private IMongoDatabase db;
 
         //static DatabaseInteraction instance;
-        public FileReader()
-        {
-            ////HOST = 
-            //this.client = new MongoClient(HOST);
-            //this.db = client.GetDatabase(DATABASENAME);
-            //Console.WriteLine("Connected to Database");
-        }
+        //public FileReader()
+        //{
 
-        private int CheckWordAgainstKeywords(string word, string[] keywords)
+        //}
+
+        private static int CheckWordAgainstKeywords(string word, string[] keywords)
         {
             int point = 0;
-           // int len = keywords.Length;
             int keywordsLen = keywords.Length; ;
             int i = 0;
             bool isMatched = false;
@@ -49,7 +41,7 @@ namespace MarlonApi.FileReader
             
 
         }
-        public int ReadandAssignVal(string resStr, string[] keywords)
+        public static int ReadandAssignVal(string resStr, string[] keywords)
         {
             int score = 0;
             string word = "";
@@ -57,21 +49,11 @@ namespace MarlonApi.FileReader
             for (int i = 0; i < resLen; i++ )
             {
                 char currChar = resStr[i];
-                if (!currChar.Equals(" "))
+                if (!currChar.Equals(" ") && !currChar.Equals(".") && !currChar.Equals(",") && !currChar.Equals("/"))
                     word += resStr[i];
                 else
                 {
-                    score += CheckWordAgainstKeywords(word, keywords);
-                    //string[] keywords = new string[9];
-                    //keywords[0] = "derp";  
-                    //int keywordsLen = keywords.Length;
-                    //for(int j = 0; j < keywordsLen; j++)
-                    //{
-                    //    if(keywords[j].Equals(word))
-                    //    {
-                    //        score++;
-                    //    }
-                    //}                  
+                    score += CheckWordAgainstKeywords(word, keywords);                
                 }
 
             }

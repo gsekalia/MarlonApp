@@ -53,6 +53,14 @@
             <param name="Email"></param>
             <param name="Password"></param>
         </member>
+        <member name="M:MarlonApi.Controllers.TodoController.CreateJobPosting(System.String,System.String,System.String[])">
+            <summary>
+            Creates a Job posting by passing information in the parameters.
+            </summary>
+            <param name="JobName"></param> 
+            <param name="Description"></param>
+            <param name="Keywords"></param>
+        </member>
         <member name="M:MarlonApi.Controllers.TodoController.GetAll">
             <summary>
             Gets All Students Information

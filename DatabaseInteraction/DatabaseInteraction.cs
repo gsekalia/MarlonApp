@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 using MongoDB.Bson;
 using MongoDB.Driver;
-
+//using System.InvalidOperationException;
 using MarlonApi.Models;
 
-namespace MarlonApi.DatabaseInteraction
+namespace MarlonApp.DatabaseInteraction
 {
     class DatabaseInteraction
     {
@@ -91,12 +91,28 @@ namespace MarlonApi.DatabaseInteraction
             var collection = this.db.GetCollection<BsonDocument>("candidate");
 
             var search = new BsonDocument("Email", email);
-            var found = collection.Find(search).First();
 
+            BsonDocument found;
+            try
+            {
+                found = collection.Find(search).First();
+            }
+            catch(InvalidOperationException e)
+            {
+                found = new BsonDocument
+                        {
+                            {"Name"         , "null" },
+                            {"PhoneNumber"  , "null" },
+                            {"Email"        , "null" },
+                            {"Password"     , "null" }
+                        };
+            }
 
             String password = found.GetValue("Password").ToString();
             String name = found.GetValue("Name").ToString();
+            email = found.GetValue("Email").ToString();
             String phoneNumber = found.GetValue("PhoneNumber").ToString();
+
             //return new User(email, password, email);
 
             Console.WriteLine(email);
@@ -123,6 +139,24 @@ namespace MarlonApi.DatabaseInteraction
             };
             collection.InsertOne(doc);
         }
+
+        public void CreateNewJobPosting(TodoJobPosting posting)
+        {
+            if (posting.Name == null)           posting.Name = "none";
+            if (posting.Description == null)    posting.Description = "none";
+            if (posting.Keywords == null)       posting.Keywords = new string[] { };
+
+
+            var coll = db.GetCollection<BsonDocument>("JobPosting");
+            var doc = new BsonDocument
+            {
+                {"JobName", posting.Name },
+                {"JobDescription", posting.Description },
+                {"Keywords", new BsonArray(posting.Keywords) }
+            };
+            coll.InsertOne(doc);
+        }
+
         public void CreateNewCandidate(TodoStudent stu)
         {
                                                                                                
@@ -162,7 +196,7 @@ namespace MarlonApi.DatabaseInteraction
             }
             catch( System.InvalidOperationException e)
             {
-
+                
             }
             bool result = false;
             string debugMsg = "No User Found";

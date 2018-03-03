@@ -10,6 +10,6 @@ namespace MarlonApi.Models
         }
 
         public DbSet<TodoStudent> TodoItems { get; set; }
-
+        //public DbSet<TodoJobPosting> TodoJobPostings { get; set; }
     }
 }

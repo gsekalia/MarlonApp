@@ -9,7 +9,10 @@ using System.Threading.Tasks;
 using System.IO;
 using Microsoft.AspNetCore.Cors;
 
-using MarlonApi.DatabaseInteraction;
+using MarlonApp.DatabaseInteraction;
+
+//using MarlonApi.DatabaseInteraction;
+
 
 namespace MarlonApi.Controllers
 {
@@ -83,38 +86,66 @@ public IActionResult Create([FromBody] TodoStudent item)
 }
 
 
-/// <summary>
-/// Creates a student by passing student information in the parameters.
-/// </summary>
-/// <param name="Name"></param> 
-/// <param name="PhoneNumber"></param>
-/// <param name="Email"></param>
-/// <param name="Password"></param>
-[HttpPost("{Name}")]
-public IActionResult createStudentFromResume(string Name, string PhoneNumber, string Email, string Password)
-{
-    string name = Name;
-    string phoneNumber= PhoneNumber;
-    string email = Email;
-    string password = Password;
-       DatabaseInteraction.DatabaseInteraction dbObj = new MarlonApi.DatabaseInteraction.DatabaseInteraction();
+    /// <summary>
+    /// Creates a student by passing student information in the parameters.
+    /// </summary>
+    /// <param name="Name"></param> 
+    /// <param name="PhoneNumber"></param>
+    /// <param name="Email"></param>
+    /// <param name="Password"></param>
+    [HttpPost("{Name}")]
+    public IActionResult createStudentFromResume(string Name, string PhoneNumber, string Email, string Password)
+    {
+        string name = Name;
+        string phoneNumber= PhoneNumber;
+        string email = Email;
+        string password = Password;
+           DatabaseInteraction dbObj = new DatabaseInteraction();
 
-    var student =  new TodoStudent {
-          Name          = name,
-          PhoneNumber   = phoneNumber, 
-          Email         = email,
-          Password      = password 
-          };
+        var student =  new TodoStudent {
+              Name          = name,
+              PhoneNumber   = phoneNumber, 
+              Email         = email,
+              Password      = password 
+              };
 
-            dbObj.CreateNewCandidate(student);
-            dbObj.PrintCollection();
+                dbObj.CreateNewCandidate(student);
+                dbObj.PrintCollection();
 
-           // _context.TodoItems.Add(student);
-            _context.TodoItems.Add(dbObj.GetUserByName(name));
-            _context.SaveChanges();
+               // _context.TodoItems.Add(student);
+                _context.TodoItems.Add(dbObj.GetUserByName(name));
+                _context.SaveChanges();
+            Console.WriteLine("saved context");
+        //return CreatedAtRoute("GetTodo", new { id = student.Id }, student);
+            return new ObjectResult(student);
+        }
 
-    return CreatedAtRoute("GetTodo", new { id = student.Id }, student);
-}
+        /// <summary>
+        /// Creates a Job posting by passing information in the parameters.
+        /// </summary>
+        /// <param name="JobName"></param> 
+        /// <param name="Description"></param>
+        /// <param name="Keywords"></param>
+        [HttpPost("{JobName}")]
+        public IActionResult CreateJobPosting(string JobName, string Description, string[] Keywords)
+        {
+            string name = JobName;
+            string descr = Description;
+            string[] keywords = Keywords;// new string[] { "ect" };// Keywords;
+            DatabaseInteraction dbObj = new DatabaseInteraction();
+
+            var posting = new TodoJobPosting
+            {
+                Name = name,
+                Description = descr,
+                Keywords = keywords // keywords
+
+            };
+            dbObj.CreateNewJobPosting(posting);
+            return new ObjectResult(posting);
+        }
+
+
         /// <summary>
         /// Gets All Students Information
         /// </summary>
@@ -123,22 +154,6 @@ public IActionResult createStudentFromResume(string Name, string PhoneNumber, st
         {
             return _context.TodoItems.ToList();
         }
-     
-        ///// <summary>
-        ///// Gets a specific Student information.
-        ///// </summary>
-        ///// <param name="id"></param> 
-        //[HttpGet("{id}", Name = "GetTodo")]
-        //public IActionResult GetById(long id)
-        //{
-        //    var item = _context.TodoItems.FirstOrDefault(t => t.Id == id);
-        //    if(item == null){
-                
-        //        return NotFound();
-        //    }
-
-        //    return new ObjectResult(item);
-        //}
 
         /// <summary>
         /// Gets a specific Student information.
@@ -148,21 +163,11 @@ public IActionResult createStudentFromResume(string Name, string PhoneNumber, st
        //public IActionResult GetById(string Email)
        public IActionResult GetByEmail(string Email)
         {
-            DatabaseInteraction.DatabaseInteraction dbObj = new MarlonApi.DatabaseInteraction.DatabaseInteraction();
+            DatabaseInteraction dbObj = new DatabaseInteraction();
 
             TodoStudent user = dbObj.GetUserByEmail(Email);
 
-
-            //var item = _context.TodoItems.FirstOrDefault(t => t.Id == id);
-            //if (item == null)
-            //{
-
-            //    return NotFound();
-            //}
-
-           // return new ObjectResult(item);
             return new ObjectResult(user);
-
         }
 
 
@@ -190,7 +195,6 @@ public IActionResult Update(long id, [FromBody] TodoStudent item)
     todo.Email          = item.Email;
     todo.Password       = item.Password;
     
-
     _context.TodoItems.Update(todo);
     _context.SaveChanges();
     return new NoContentResult();
