@@ -13815,23 +13815,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Gseka\\.nuget\\packages\\": {},
+    "C:\\Users\\George\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Gseka\\Documents\\school\\CSC394\\MarlonApp\\MarlonApp.csproj",
+      "projectUniqueName": "C:\\Users\\George\\Documents\\Web_API_MVC-master-master\\Web_API_MVC-master-master\\MarlonApp\\MarlonApp.csproj",
       "projectName": "MarlonApp",
-      "projectPath": "C:\\Users\\Gseka\\Documents\\school\\CSC394\\MarlonApp\\MarlonApp.csproj",
-      "packagesPath": "C:\\Users\\Gseka\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Gseka\\Documents\\school\\CSC394\\MarlonApp\\obj\\",
+      "projectPath": "C:\\Users\\George\\Documents\\Web_API_MVC-master-master\\Web_API_MVC-master-master\\MarlonApp\\MarlonApp.csproj",
+      "packagesPath": "C:\\Users\\George\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\George\\Documents\\Web_API_MVC-master-master\\Web_API_MVC-master-master\\MarlonApp\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\Gseka\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\George\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [

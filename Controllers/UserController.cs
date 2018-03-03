@@ -130,7 +130,8 @@ public IActionResult Create([FromBody] TodoStudent item)
         [HttpGet]
         public IEnumerable<TodoStudent> GetAll()
         {
-            return _context.TodoItems.ToList();
+            DatabaseInteraction dbObj = new DatabaseInteraction();
+            return dbObj.GetAllUsers();
         }
 
         /// <summary>

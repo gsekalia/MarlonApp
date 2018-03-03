@@ -42,7 +42,87 @@ namespace MarlonApp.DatabaseInteraction
 
         public IMongoCollection<BsonDocument> getCollection(String name)
         {
-            return this.db.GetCollection<BsonDocument>(name);         }
+            return this.db.GetCollection<BsonDocument>(name);
+        }
+
+        //---------------------------BSON TO TODO OBJECT CONVERTERS----------------------------------------------------------------------
+        private TodoStudent BsonToUser(BsonDocument doc)
+        {
+            String name = doc.GetValue("Name").ToString();
+            String password = doc.GetValue("Password").ToString();
+            String email = doc.GetValue("Email").ToString();
+            String phoneNumber = doc.GetValue("PhoneNumber").ToString();
+
+            Console.WriteLine(name);
+            Console.WriteLine(password);
+            Console.WriteLine(email);
+            return new TodoStudent
+            {
+                Name = name,
+                PhoneNumber = phoneNumber,
+                Email = email,
+                Password = password
+            };
+        }
+
+
+        private TodoJobPosting BsonToPosting(BsonDocument doc)
+        {
+            string Name = doc.GetValue("JobName").ToString();
+            String descr = doc.GetValue("JobDescription").ToString();
+            var k = doc.GetValue("Keywords").AsBsonArray.ToArray();
+
+            int len = k.Length;
+            string[] keywords = new string[len];
+            for (int i = 0; i < len; i++)
+            {
+                keywords[i] = k[i].ToString();
+               // Console.WriteLine(keywords[i]);
+            }
+            return new TodoJobPosting
+            {
+                JobName = Name,
+                Description = descr,
+                Keywords = keywords
+
+            };
+        }
+
+        //----------------------------GET ALL FROM DATABASE---------------------------------------------------------------------
+        public List<TodoJobPosting> GetAllPostings()
+        {
+            var coll = this.db.GetCollection<BsonDocument>("JobPosting");
+            List<TodoJobPosting> postingList = new List<TodoJobPosting>();
+            using (var cursor = coll.Find(new BsonDocument()).ToCursor())
+            {
+                while (cursor.MoveNext())
+                {
+                    foreach (var doc in cursor.Current)
+                    {
+                        postingList.Add(BsonToPosting(doc));                   
+                    }
+                }
+            }
+            return postingList;
+        }
+
+        public List<TodoStudent> GetAllUsers()
+        {
+            var coll = this.db.GetCollection<BsonDocument>("candidate");
+            List<TodoStudent> postingList = new List<TodoStudent>();
+            using (var cursor = coll.Find(new BsonDocument()).ToCursor())
+            {
+                while (cursor.MoveNext())
+                {
+                    foreach (var doc in cursor.Current)
+                    {
+                        postingList.Add(BsonToUser(doc));
+                    }
+                }
+            }
+            return postingList;
+        }
+
 
         public void PrintCollection()
         {
@@ -68,22 +148,36 @@ namespace MarlonApp.DatabaseInteraction
             var collection = this.db.GetCollection<BsonDocument>("candidate");
 
             var search = new BsonDocument("Name", name);
-            var found = collection.Find(search).First();
-
+            BsonDocument found;
+            try
+            {
+                found = collection.Find(search).First();
+            }
+            catch (InvalidOperationException e)
+            {
+                found = new BsonDocument
+                        {
+                            {"Name"         , "null" },
+                            {"PhoneNumber"  , "null" },
+                            {"Email"        , "null" },
+                            {"Password"     , "null" }
+                        };
+            }
+            return BsonToUser(found);
          
-            String password = found.GetValue("Password").ToString();
-            String email = found.GetValue("Email").ToString();
-            String phoneNumber = found.GetValue("PhoneNumber").ToString();
-            //return new User(name, password, email);
+            //String password = found.GetValue("Password").ToString();
+            //String email = found.GetValue("Email").ToString();
+            //String phoneNumber = found.GetValue("PhoneNumber").ToString();
+            ////return new User(name, password, email);
 
-            Console.WriteLine(name);
-            Console.WriteLine(password);
-            Console.WriteLine(email);
-            return new TodoStudent{ Name = name,
-                                    PhoneNumber = phoneNumber,
-                                    Email = email,
-                                    Password = password
-                                    };       
+            //Console.WriteLine(name);
+            //Console.WriteLine(password);
+            //Console.WriteLine(email);
+            //return new TodoStudent{ Name = name,
+            //                        PhoneNumber = phoneNumber,
+            //                        Email = email,
+            //                        Password = password
+            //                        };       
         }
 
         public TodoStudent GetUserByEmail(String email)
@@ -107,24 +201,25 @@ namespace MarlonApp.DatabaseInteraction
                             {"Password"     , "null" }
                         };
             }
+            return BsonToUser(found);
 
-            String password = found.GetValue("Password").ToString();
-            String name = found.GetValue("Name").ToString();
-            email = found.GetValue("Email").ToString();
-            String phoneNumber = found.GetValue("PhoneNumber").ToString();
+            //String password = found.GetValue("Password").ToString();
+            //String name = found.GetValue("Name").ToString();
+            //email = found.GetValue("Email").ToString();
+            //String phoneNumber = found.GetValue("PhoneNumber").ToString();
 
-            //return new User(email, password, email);
+            ////return new User(email, password, email);
 
-            Console.WriteLine(email);
-            Console.WriteLine(password);
-            Console.WriteLine(email);
-            return new TodoStudent
-            {
-                Name        = name,
-                PhoneNumber = phoneNumber,
-                Email       = email,
-                Password    = password
-            };
+            //Console.WriteLine(email);
+            //Console.WriteLine(password);
+            //Console.WriteLine(email);
+            //return new TodoStudent
+            //{
+            //    Name        = name,
+            //    PhoneNumber = phoneNumber,
+            //    Email       = email,
+            //    Password    = password
+            //};
         }
 
         public TodoJobPosting GetPostingByName(String Name)
@@ -147,28 +242,28 @@ namespace MarlonApp.DatabaseInteraction
                             {"Keywords"     , new BsonArray("") }
                         };
             }
+            return BsonToPosting(found);
+            //Name = found.GetValue("JobName").ToString();
+            //String descr = found.GetValue("JobDescription").ToString();
+            //var k = found.GetValue("Keywords").AsBsonArray.ToArray();
 
-            Name = found.GetValue("JobName").ToString();
-            String descr = found.GetValue("JobDescription").ToString();
-            var k = found.GetValue("Keywords").AsBsonArray.ToArray();
+            //int len = k.Length;
+            //string[] keywords = new string[len];
+            //for(int i = 0; i < len; i++)
+            //{
+            //    keywords[i] = k[i].ToString();
+            //    Console.WriteLine(keywords[i]);
+            //}
 
-            int len = k.Length;
-            string[] keywords = new string[len];
-            for(int i = 0; i < len; i++)
-            {
-                keywords[i] = k[i].ToString();
-                Console.WriteLine(keywords[i]);
-            }
+            //Console.WriteLine(Name);
+            //Console.WriteLine(descr);
+            //return new TodoJobPosting
+            //{
+            //    JobName = Name,
+            //    Description = descr,
+            //    Keywords = keywords
 
-            Console.WriteLine(Name);
-            Console.WriteLine(descr);
-            return new TodoJobPosting
-            {
-                JobName = Name,
-                Description = descr,
-                Keywords = keywords
-
-            };
+            //};
         }
 
         public void CreateNewCandidate(String name, String password, String email)

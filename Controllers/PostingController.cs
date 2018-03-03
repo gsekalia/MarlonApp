@@ -40,6 +40,17 @@ namespace MarlonApi.Controllers
 
 
         /// <summary>
+        /// Gets All Job Postings
+        /// </summary>
+        [HttpGet]
+        public IEnumerable<TodoJobPosting> GetAll()
+        {
+            DatabaseInteraction dbObj = new DatabaseInteraction();
+            return dbObj.GetAllPostings();
+        }
+
+
+        /// <summary>
         /// Creates a Job posting by passing information in the parameters.
         /// </summary>
         /// <param name="JobName"></param> 
