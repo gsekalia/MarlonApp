@@ -14,14 +14,6 @@ namespace MarlonApi.FileReader
 {
     static class FileReader
     {
-
-
-        //static DatabaseInteraction instance;
-        //public FileReader()
-        //{
-
-        //}
-
         private static int CheckWordAgainstKeywords(string word, string[] keywords)
         {
             int point = 0;
@@ -38,9 +30,8 @@ namespace MarlonApi.FileReader
                 i++;
             }
             return point;
-            
-
         }
+
         public static int ReadandAssignVal(string resStr, string[] keywords)
         {
             int score = 0;

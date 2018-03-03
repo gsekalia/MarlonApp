@@ -127,6 +127,50 @@ namespace MarlonApp.DatabaseInteraction
             };
         }
 
+        public TodoJobPosting GetPostingByName(String Name)
+        {
+            var collection = this.db.GetCollection<BsonDocument>("JobPosting");
+
+            var search = new BsonDocument("JobName", Name);
+
+            BsonDocument found;
+            try
+            {
+                found = collection.Find(search).First();
+            }
+            catch (InvalidOperationException e)
+            {
+                found = new BsonDocument
+                        {
+                            {"JobName"      , "null" },
+                            {"JobDescription"  , "null" },
+                            {"Keywords"     , new BsonArray("") }
+                        };
+            }
+
+            Name = found.GetValue("JobName").ToString();
+            String descr = found.GetValue("JobDescription").ToString();
+            var k = found.GetValue("Keywords").AsBsonArray.ToArray();
+
+            int len = k.Length;
+            string[] keywords = new string[len];
+            for(int i = 0; i < len; i++)
+            {
+                keywords[i] = k[i].ToString();
+                Console.WriteLine(keywords[i]);
+            }
+
+            Console.WriteLine(Name);
+            Console.WriteLine(descr);
+            return new TodoJobPosting
+            {
+                JobName = Name,
+                Description = descr,
+                Keywords = keywords
+
+            };
+        }
+
         public void CreateNewCandidate(String name, String password, String email)
         {
             var collection = db.GetCollection<BsonDocument>("candidate");
@@ -142,7 +186,7 @@ namespace MarlonApp.DatabaseInteraction
 
         public void CreateNewJobPosting(TodoJobPosting posting)
         {
-            if (posting.Name == null)           posting.Name = "none";
+            if (posting.JobName == null)           posting.JobName = "none";
             if (posting.Description == null)    posting.Description = "none";
             if (posting.Keywords == null)       posting.Keywords = new string[] { };
 
@@ -150,7 +194,7 @@ namespace MarlonApp.DatabaseInteraction
             var coll = db.GetCollection<BsonDocument>("JobPosting");
             var doc = new BsonDocument
             {
-                {"JobName", posting.Name },
+                {"JobName", posting.JobName },
                 {"JobDescription", posting.Description },
                 {"Keywords", new BsonArray(posting.Keywords) }
             };

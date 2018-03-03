@@ -22,3 +22,15 @@ C:\Users\George\Documents\Web_API_MVC-master-master\Web_API_MVC-master-master\Ma
 C:\Users\George\Documents\Web_API_MVC-master-master\Web_API_MVC-master-master\MarlonApp\obj\Debug\netcoreapp2.0\MarlonApp.dll
 C:\Users\George\Documents\Web_API_MVC-master-master\Web_API_MVC-master-master\MarlonApp\obj\Debug\netcoreapp2.0\MarlonApp.pdb
 C:\Users\George\Documents\Web_API_MVC-master-master\Web_API_MVC-master-master\MarlonApp\obj\Debug\netcoreapp2.0\MarlonApp.csprojResolveAssemblyReference.cache
+C:\Users\Gseka\Documents\school\CSC394\MarlonApp\bin\Debug\netcoreapp2.0\MarlonApi.xml
+C:\Users\Gseka\Documents\school\CSC394\MarlonApp\bin\Debug\netcoreapp2.0\MarlonApp.deps.json
+C:\Users\Gseka\Documents\school\CSC394\MarlonApp\bin\Debug\netcoreapp2.0\MarlonApp.runtimeconfig.json
+C:\Users\Gseka\Documents\school\CSC394\MarlonApp\bin\Debug\netcoreapp2.0\MarlonApp.runtimeconfig.dev.json
+C:\Users\Gseka\Documents\school\CSC394\MarlonApp\bin\Debug\netcoreapp2.0\MarlonApp.dll
+C:\Users\Gseka\Documents\school\CSC394\MarlonApp\bin\Debug\netcoreapp2.0\MarlonApp.pdb
+C:\Users\Gseka\Documents\school\CSC394\MarlonApp\obj\Debug\netcoreapp2.0\MarlonApp.csprojResolveAssemblyReference.cache
+C:\Users\Gseka\Documents\school\CSC394\MarlonApp\obj\Debug\netcoreapp2.0\MarlonApp.csproj.CoreCompileInputs.cache
+C:\Users\Gseka\Documents\school\CSC394\MarlonApp\obj\Debug\netcoreapp2.0\MarlonApp.AssemblyInfoInputs.cache
+C:\Users\Gseka\Documents\school\CSC394\MarlonApp\obj\Debug\netcoreapp2.0\MarlonApp.AssemblyInfo.cs
+C:\Users\Gseka\Documents\school\CSC394\MarlonApp\obj\Debug\netcoreapp2.0\MarlonApp.dll
+C:\Users\Gseka\Documents\school\CSC394\MarlonApp\obj\Debug\netcoreapp2.0\MarlonApp.pdb

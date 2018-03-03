@@ -23,14 +23,14 @@ namespace MarlonApi.Controllers
     [EnableCors("CorsPolicy")]
     [Produces("application/json")]
     [Route("api/student")]
-    public class TodoController : Controller
+    public class UserController : Controller
     {
         private readonly TodoContext _context;
 
         /// <summary>
         /// creates the first student object
         /// </summary>
-        public TodoController(TodoContext context){
+        public UserController(TodoContext context){
 
             _context = context;
 
@@ -94,7 +94,10 @@ public IActionResult Create([FromBody] TodoStudent item)
     /// <param name="Email"></param>
     /// <param name="Password"></param>
     [HttpPost("{Name}")]
-    public IActionResult createStudentFromResume(string Name, string PhoneNumber, string Email, string Password)
+    public IActionResult CreateStudentFromResume(   string Name, 
+                                                    string PhoneNumber, 
+                                                    string Email, 
+                                                    string Password)
     {
         string name = Name;
         string phoneNumber= PhoneNumber;
@@ -120,31 +123,6 @@ public IActionResult Create([FromBody] TodoStudent item)
             return new ObjectResult(student);
         }
 
-        /// <summary>
-        /// Creates a Job posting by passing information in the parameters.
-        /// </summary>
-        /// <param name="JobName"></param> 
-        /// <param name="Description"></param>
-        /// <param name="Keywords"></param>
-        [HttpPost("{JobName}")]
-        public IActionResult CreateJobPosting(string JobName, string Description, string[] Keywords)
-        {
-            string name = JobName;
-            string descr = Description;
-            string[] keywords = Keywords;// new string[] { "ect" };// Keywords;
-            DatabaseInteraction dbObj = new DatabaseInteraction();
-
-            var posting = new TodoJobPosting
-            {
-                Name = name,
-                Description = descr,
-                Keywords = keywords // keywords
-
-            };
-            dbObj.CreateNewJobPosting(posting);
-            return new ObjectResult(posting);
-        }
-
 
         /// <summary>
         /// Gets All Students Information
@@ -160,7 +138,6 @@ public IActionResult Create([FromBody] TodoStudent item)
         /// </summary>
         /// <param name="Email"></param> 
         [HttpGet("{Email}", Name = "GetTodo")]
-       //public IActionResult GetById(string Email)
        public IActionResult GetByEmail(string Email)
         {
             DatabaseInteraction dbObj = new DatabaseInteraction();
@@ -169,7 +146,6 @@ public IActionResult Create([FromBody] TodoStudent item)
 
             return new ObjectResult(user);
         }
-
 
         /// <summary>
         /// Updates a specific Student.

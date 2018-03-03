@@ -71,6 +71,36 @@ namespace MarlonApi
                 });
 
             app.UseMvc();
+
+            //app.UseMvc(  routes=>
+            //{
+            //    routes.MapRoute(
+            //        name: "javascript",
+            //        template: "javascript/{action}.js",
+            //        defaults: new { controller = "mainline" });
+            //    routes.MapRoute(
+            //        name: "default",
+            //        template: "{controller=Home}/{action=Index}/{id?}");
+            //    routes.MapRoute(
+            //        name: "AIMApi",
+            //        template: "aim/v1/{action}/{id?}",
+            //        defaults: new { controller = "aim" });
+            //    routes.MapRoute(
+            //        name: "AIMContactsApi",
+            //        template: "aim/v1/contacts/{action}/{id?}",
+            //        defaults: new { controller = "aimContactsController" }
+            //    );
+            //    routes.MapRoute(
+            //        name: "AIMLocationsApi",
+            //        template: "aim/v1/locations/{action}/{id?}",
+            //        defaults: new { controller = "aimLocationsController" }
+            //    );
+            //    routes.MapRoute(
+            //        name: "RMSApi",
+            //        template: "{controller=rms}/v1/{action}/{id?}");
+            //});
+            //);
+
             // http://localhost:5000/swagger/#/
             // http://localhost:5000/swagger/v1/swagger.json
         }
