@@ -55,7 +55,7 @@ namespace MarlonApi.Controllers
 ///        "phoneNumber": "334-123-6789",
 ///        "bsEducationSchool": "Depaul University",
 ///        "bsEducationTitle": "Computer Science",
-///        "msEducationSchool": "DePaul Univercity",
+///        "msEducationSchool": "DePaul University",
 ///        "msEducationTitle": "Game Programming",
 ///        "workExperienceCompanyNameOne": "Google",
 ///        "workExperienceTitleOne": "Software Developer",
@@ -86,40 +86,42 @@ public IActionResult Create([FromBody] TodoStudent item)
 }
 
 
-    /// <summary>
-    /// Creates a student by passing student information in the parameters.
-    /// </summary>
-    /// <param name="Name"></param> 
-    /// <param name="PhoneNumber"></param>
-    /// <param name="Email"></param>
-    /// <param name="Password"></param>
-    [HttpPost("{Name}")]
+        /// <summary>
+        /// Creates a student by passing student information in the parameters.
+        /// </summary>
+        /// <param name="Name"></param> 
+        /// <param name="PhoneNumber"></param>
+        /// <param name="Email"></param>
+        /// <param name="Password"></param>
+        /// <param name="UserType"></param>
+        [HttpPost("{Name}")]
     public IActionResult CreateStudentFromResume(   string Name, 
                                                     string PhoneNumber, 
                                                     string Email, 
-                                                    string Password)
+                                                    string Password,
+                                                    string UserType)
     {
-        string name = Name;
-        string phoneNumber= PhoneNumber;
-        string email = Email;
-        string password = Password;
-           DatabaseInteraction dbObj = new DatabaseInteraction();
+        string name         = Name;
+        string phoneNumber  = PhoneNumber;
+        string email        = Email;
+        string password     = Password;
+        string userType     = UserType;
+
+        DatabaseInteraction dbObj = new DatabaseInteraction();
 
         var student =  new TodoStudent {
               Name          = name,
               PhoneNumber   = phoneNumber, 
               Email         = email,
-              Password      = password 
+              Password      = password, 
+              UserType      = userType
               };
 
                 dbObj.CreateNewCandidate(student);
                 dbObj.PrintCollection();
 
-               // _context.TodoItems.Add(student);
                 _context.TodoItems.Add(dbObj.GetUserByName(name));
                 _context.SaveChanges();
-            Console.WriteLine("saved context");
-        //return CreatedAtRoute("GetTodo", new { id = student.Id }, student);
             return new ObjectResult(student);
         }
 
@@ -148,34 +150,44 @@ public IActionResult Create([FromBody] TodoStudent item)
             return new ObjectResult(user);
         }
 
+
         /// <summary>
-        /// Updates a specific Student.
+        /// Updates a specific user.
         /// </summary>
-        /// <param name="id"></param> 
-        /// <param name="item"></param>
-        [HttpPut("{id}")]
-public IActionResult Update(long id, [FromBody] TodoStudent item)
-{
-    if (item == null || item.Id != id)
-    {
-        return BadRequest();
-    }
+        /// <param name="Email"></param>
+        /// <param name="newName"></param> 
+        /// <param name="newPhoneNumber"></param>
+        /// <param name="newEmail"></param>
+        /// <param name="newPassword"></param>
+        /// <param name="newUserType"></param>
+        [HttpPut("{email}")]
+        public IActionResult Update(string Email, 
+                                    string newName, 
+                                    string newPhoneNumber, 
+                                    string newEmail, 
+                                    string newPassword, 
+                                    string newUserType)
+        {
 
-    var todo = _context.TodoItems.FirstOrDefault(t => t.Id == id);
-    if (todo == null)
-    {
-        return NotFound();
-    }
+            //Get the user via email and then update
 
-    todo.Name           = item.Name;
-    todo.PhoneNumber    = item.PhoneNumber;
-    todo.Email          = item.Email;
-    todo.Password       = item.Password;
-    
-    _context.TodoItems.Update(todo);
-    _context.SaveChanges();
-    return new NoContentResult();
-}
+            DatabaseInteraction dbObj = new DatabaseInteraction();
+
+
+            var student = new TodoStudent
+            {
+                Name = newName,
+                PhoneNumber = newPhoneNumber,
+                Email = newEmail,
+                Password = newPassword,
+                UserType = newUserType
+            };
+
+            dbObj.UpdateUserInfo(Email, student);
+
+            return new NoContentResult();
+        }
+
 
 /// <summary>
 /// Deletes a specific Student.

@@ -66,7 +66,7 @@ namespace MarlonApi.Controllers
 
             var posting = new TodoJobPosting
             {
-                JobName = name,
+                JobTitle = name,
                 Description = descr,
                 Keywords = keywords // keywords
 

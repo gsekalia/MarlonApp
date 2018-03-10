@@ -44,47 +44,79 @@ namespace MarlonApp.DatabaseInteraction
         {
             return this.db.GetCollection<BsonDocument>(name);
         }
+        //---------------------------OBJECT TO BSON CONVERTERS----------------------------------------------------------------------
+        private BsonDocument UserToBson(TodoStudent stu)
+        {
+
+            var doc = new BsonDocument
+            {
+                {"Name"         , stu.Name       },
+                {"PhoneNumber"  , stu.PhoneNumber},
+                {"Email"        , stu.Email      },
+                {"Password"     , stu.Password   },
+                {"UserType"     , stu.UserType   }
+            };
+            return doc;
+
+        }
+        private BsonDocument PostingToBson(TodoJobPosting posting)
+        {
+            return new BsonDocument
+            {
+                {"JobTitle"         , posting.JobTitle                  },
+                {"Company"          , posting.Company                   },
+                {"Location"         , posting.Location                  },
+                {"JobDescription"   , posting.Description               },
+                {"Keywords"         , new BsonArray(posting.Keywords)   }
+            };
+
+        }
+
+
 
         //---------------------------BSON TO TODO OBJECT CONVERTERS----------------------------------------------------------------------
         private TodoStudent BsonToUser(BsonDocument doc)
         {
-            String name = doc.GetValue("Name").ToString();
-            String password = doc.GetValue("Password").ToString();
-            String email = doc.GetValue("Email").ToString();
-            String phoneNumber = doc.GetValue("PhoneNumber").ToString();
-
+            String name         = doc.GetValue("Name").ToString();
+            String password     = doc.GetValue("Password").ToString();
+            String email        = doc.GetValue("Email").ToString();
+            String phoneNumber  = doc.GetValue("PhoneNumber").ToString();
+            String userType     = doc.GetValue("UserType").ToString();
             Console.WriteLine(name);
             Console.WriteLine(password);
             Console.WriteLine(email);
             return new TodoStudent
             {
-                Name = name,
+                Name        = name,
                 PhoneNumber = phoneNumber,
-                Email = email,
-                Password = password
+                Email       = email,
+                Password    = password,
+                UserType    = userType
             };
         }
 
 
         private TodoJobPosting BsonToPosting(BsonDocument doc)
         {
-            string Name = doc.GetValue("JobName").ToString();
-            String descr = doc.GetValue("JobDescription").ToString();
-            var k = doc.GetValue("Keywords").AsBsonArray.ToArray();
+            string Name     = doc.GetValue("JobTitle").ToString();
+            String comp     = doc.GetValue("Company").ToString();
+            string loc      = doc.GetValue("Location").ToString();
+            String descr    = doc.GetValue("JobDescription").ToString();
+            var k           = doc.GetValue("Keywords").AsBsonArray.ToArray();
 
             int len = k.Length;
             string[] keywords = new string[len];
             for (int i = 0; i < len; i++)
             {
                 keywords[i] = k[i].ToString();
-               // Console.WriteLine(keywords[i]);
             }
             return new TodoJobPosting
             {
-                JobName = Name,
+                JobTitle = Name,
+                Company = comp,
+                Location = loc,
                 Description = descr,
                 Keywords = keywords
-
             };
         }
 
@@ -127,9 +159,6 @@ namespace MarlonApp.DatabaseInteraction
         public void PrintCollection()
         {
             var collection = this.db.GetCollection<BsonDocument>("candidate");
-           // MongoCursor<BsonDocument> cursor = collection.Find<BsonDocument>().//find().iterator();
-            //var doc = collection.Find(new BsonDocument()).FirstOrDefault();
-
             using (var cursor = collection.Find(new BsonDocument()).ToCursor())
             {
                 while (cursor.MoveNext())
@@ -142,6 +171,7 @@ namespace MarlonApp.DatabaseInteraction
             }
         }
 
+        //-----------------------GET METHODS---------------------------------------------------------------
 
         public TodoStudent GetUserByName(String name)
         {
@@ -160,24 +190,11 @@ namespace MarlonApp.DatabaseInteraction
                             {"Name"         , "null" },
                             {"PhoneNumber"  , "null" },
                             {"Email"        , "null" },
-                            {"Password"     , "null" }
+                            {"Password"     , "null" },
+                            {"UserType"     , "null" }
                         };
             }
-            return BsonToUser(found);
-         
-            //String password = found.GetValue("Password").ToString();
-            //String email = found.GetValue("Email").ToString();
-            //String phoneNumber = found.GetValue("PhoneNumber").ToString();
-            ////return new User(name, password, email);
-
-            //Console.WriteLine(name);
-            //Console.WriteLine(password);
-            //Console.WriteLine(email);
-            //return new TodoStudent{ Name = name,
-            //                        PhoneNumber = phoneNumber,
-            //                        Email = email,
-            //                        Password = password
-            //                        };       
+            return BsonToUser(found);               
         }
 
         public TodoStudent GetUserByEmail(String email)
@@ -198,35 +215,18 @@ namespace MarlonApp.DatabaseInteraction
                             {"Name"         , "null" },
                             {"PhoneNumber"  , "null" },
                             {"Email"        , "null" },
-                            {"Password"     , "null" }
-                        };
+                            {"Password"     , "null" },
+                            {"UserType"     , "null" }
+                        };               
             }
             return BsonToUser(found);
-
-            //String password = found.GetValue("Password").ToString();
-            //String name = found.GetValue("Name").ToString();
-            //email = found.GetValue("Email").ToString();
-            //String phoneNumber = found.GetValue("PhoneNumber").ToString();
-
-            ////return new User(email, password, email);
-
-            //Console.WriteLine(email);
-            //Console.WriteLine(password);
-            //Console.WriteLine(email);
-            //return new TodoStudent
-            //{
-            //    Name        = name,
-            //    PhoneNumber = phoneNumber,
-            //    Email       = email,
-            //    Password    = password
-            //};
         }
 
         public TodoJobPosting GetPostingByName(String Name)
         {
             var collection = this.db.GetCollection<BsonDocument>("JobPosting");
 
-            var search = new BsonDocument("JobName", Name);
+            var search = new BsonDocument("JobTitle", Name);
 
             BsonDocument found;
             try
@@ -237,73 +237,36 @@ namespace MarlonApp.DatabaseInteraction
             {
                 found = new BsonDocument
                         {
-                            {"JobName"      , "null" },
-                            {"JobDescription"  , "null" },
-                            {"Keywords"     , new BsonArray("") }
+                            {"JobTitle"         , "null"            },
+                            {"Company"          , "null"            },
+                            {"Location"         , "null"            },
+                            {"JobDescription"   , "null"            },
+                            {"Keywords"         , new BsonArray("") }
                         };
             }
-            return BsonToPosting(found);
-            //Name = found.GetValue("JobName").ToString();
-            //String descr = found.GetValue("JobDescription").ToString();
-            //var k = found.GetValue("Keywords").AsBsonArray.ToArray();
-
-            //int len = k.Length;
-            //string[] keywords = new string[len];
-            //for(int i = 0; i < len; i++)
-            //{
-            //    keywords[i] = k[i].ToString();
-            //    Console.WriteLine(keywords[i]);
-            //}
-
-            //Console.WriteLine(Name);
-            //Console.WriteLine(descr);
-            //return new TodoJobPosting
-            //{
-            //    JobName = Name,
-            //    Description = descr,
-            //    Keywords = keywords
-
-            //};
+            return BsonToPosting(found); 
         }
-
-        public void CreateNewCandidate(String name, String password, String email)
-        {
-            var collection = db.GetCollection<BsonDocument>("candidate");
-
-            var doc = new BsonDocument
-            {
-                {"Name", name },
-                {"Password", password },
-                {"Email", email }
-            };
-            collection.InsertOne(doc);
-        }
+        //-----------------------CREATE NEW ENTRY METHODS--------------------------------------------
 
         public void CreateNewJobPosting(TodoJobPosting posting)
         {
-            if (posting.JobName == null)           posting.JobName = "none";
-            if (posting.Description == null)    posting.Description = "none";
-            if (posting.Keywords == null)       posting.Keywords = new string[] { };
-
+            posting = DefaultToNone(posting);
 
             var coll = db.GetCollection<BsonDocument>("JobPosting");
             var doc = new BsonDocument
             {
-                {"JobName", posting.JobName },
-                {"JobDescription", posting.Description },
-                {"Keywords", new BsonArray(posting.Keywords) }
+                {"JobTitle"         , posting.JobTitle                  },
+                {"Company"          , posting.Company                   },
+                {"Location"         , posting.Location                  },
+                {"JobDescription"   , posting.Description               },
+                {"Keywords"         , new BsonArray(posting.Keywords)   }
             };
             coll.InsertOne(doc);
         }
 
         public void CreateNewCandidate(TodoStudent stu)
-        {
-                                                                                               
-            if(stu.Name         == null) stu.Name        = "none";
-            if(stu.PhoneNumber  == null) stu.PhoneNumber = "none";
-            if(stu.Email        == null) stu.Email       = "none";
-            if(stu.Password     == null) stu.Password    = "none";
-           
+        {                                                                                               
+            stu = DefaultToNone(stu); 
 
             var collection = db.GetCollection<BsonDocument>("candidate");
 
@@ -312,20 +275,76 @@ namespace MarlonApp.DatabaseInteraction
                 {"Name"         , stu.Name       },
                 {"PhoneNumber"  , stu.PhoneNumber},
                 {"Email"        , stu.Email      },
-                {"Password"     , stu.Password   }
-             
+                {"Password"     , stu.Password   },
+                {"UserType"     , stu.UserType   },
+
+
             };
             collection.InsertOne(doc);
         }
 
+        //-------------------------------------------UPDATE METHODS-------------------------------------------------------------------
+
+        public TodoStudent UpdateUserInfo(string email, TodoStudent newStu)
+        {
+            TodoStudent stu = GetUserByEmail(email);
+
+            newStu = DefaultToExisting(stu, newStu);
+
+            var collection = db.GetCollection<BsonDocument>("candidate");
+
+            //var doc = new BsonDocument
+            //{
+            //    {"Name"         , newStu.Name       },
+            //    {"PhoneNumber"  , newStu.PhoneNumber},
+            //    {"Email"        , newStu.Email      },
+            //    {"Password"     , newStu.Password   },
+            //    {"Password"     , newStu.Password   }
+            //};
+
+            var doc = UserToBson(newStu);
+            var search = new BsonDocument("Email", email);
+
+            BsonDocument found;
+            found = collection.Find(search).First();
+            collection.ReplaceOne(found, doc);
+            return newStu;
+        }
+
+        public TodoJobPosting UpdateUserInfo(string title, TodoJobPosting newPosting)
+        {
+            TodoJobPosting oldPosting = GetPostingByName(title);
+            newPosting = DefaultToExisting(oldPosting, newPosting);
+
+            var collection = db.GetCollection<BsonDocument>("candidate");
+
+            var doc = new BsonDocument
+            {
+                {"JobTitle"         , newPosting.JobTitle                  },
+                {"Company"          , newPosting.Company                   },
+                {"Location"         , newPosting.Location                  },
+                {"JobDescription"   , newPosting.Description               },
+                {"Keywords"         , new BsonArray(newPosting.Keywords)   }
+            };
+
+
+            var search = new BsonDocument("JobTitle", title);
+
+            BsonDocument found;
+            found = collection.Find(search).First();
+            collection.ReplaceOne(found, doc);
+            return newPosting;
+        }
+
+        //-------------------------------------------AUTHENTICATION---------------------------------------------------------------------
         public bool AuthenticateUserLogin(String name, String password)
         {
             var collection = db.GetCollection<BsonDocument>("candidate");
 
             var search = new BsonDocument
             {
-                {"name", name },
-                {"password", password }
+                {"name"     , name      },
+                {"password" , password  }
             };
 
             BsonDocument found = null;
@@ -349,6 +368,54 @@ namespace MarlonApp.DatabaseInteraction
             return result;
         }
 
+
+
+
+        //--------------------------------------DEFAULT POJO CONSTRUCTOR-----------------------------------------------------------
+        private TodoStudent DefaultToNone(TodoStudent stu)
+        {
+            if (stu.Name         == null)    stu.Name         = "none" ;
+            if (stu.PhoneNumber  == null)    stu.PhoneNumber  = "none" ;
+            if (stu.Email        == null)    stu.Email        = "none" ;
+            if (stu.Password     == null)    stu.Password     = "none" ;
+            if (stu.UserType     == null)    stu.UserType     = "candidate";
+            return stu;
+
+        }
+        private TodoJobPosting DefaultToNone(TodoJobPosting posting)
+        {
+            if (posting.JobTitle    == null) posting.JobTitle       = "none";
+            if (posting.Company     == null) posting.Company        = "none";
+            if (posting.Location    == null) posting.Location       = "none";
+            if (posting.Description == null) posting.Description    = "none";
+            if (posting.Keywords    == null) posting.Keywords       = new string[] { };
+
+            return posting;
+
+        }
+
+        private TodoStudent DefaultToExisting(TodoStudent oldStu, TodoStudent newStu)
+        {
+            if (newStu.Name         == null)    newStu.Name         = oldStu.Name         ;
+            if (newStu.PhoneNumber  == null)    newStu.PhoneNumber  = oldStu.PhoneNumber  ;
+            if (newStu.Email        == null)    newStu.Email        = oldStu.Email        ;
+            if (newStu.Password     == null)    newStu.Password     = oldStu.Password     ;
+            if (newStu.UserType     == null)    newStu.UserType     = oldStu.UserType     ;
+
+            return newStu;
+        }
+
+
+        private TodoJobPosting DefaultToExisting(TodoJobPosting oldPosting, TodoJobPosting newPosting)
+        {
+            if (newPosting.JobTitle      == null) newPosting.JobTitle    = oldPosting.JobTitle   ;
+            if (newPosting.Location      == null) newPosting.Location    = oldPosting.Location   ;
+            if (newPosting.Company       == null) newPosting.Company     = oldPosting.Company    ;
+            if (newPosting.Description   == null) newPosting.Description = oldPosting.Description; 
+            if (newPosting.Keywords      == null) newPosting.Keywords    = oldPosting.Keywords   ;
+
+            return newPosting;
+        }
     }
 
 

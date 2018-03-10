@@ -58,7 +58,7 @@
                     "phoneNumber": "334-123-6789",
                     "bsEducationSchool": "Depaul University",
                     "bsEducationTitle": "Computer Science",
-                    "msEducationSchool": "DePaul Univercity",
+                    "msEducationSchool": "DePaul University",
                     "msEducationTitle": "Game Programming",
                     "workExperienceCompanyNameOne": "Google",
                     "workExperienceTitleOne": "Software Developer",
@@ -73,7 +73,7 @@
              <response code="201">Returns the newly-created student</response>
              <response code="400">If the item is null</response> 
         </member>
-        <member name="M:MarlonApi.Controllers.UserController.CreateStudentFromResume(System.String,System.String,System.String,System.String)">
+        <member name="M:MarlonApi.Controllers.UserController.CreateStudentFromResume(System.String,System.String,System.String,System.String,System.String)">
             <summary>
             Creates a student by passing student information in the parameters.
             </summary>
@@ -81,6 +81,7 @@
             <param name="PhoneNumber"></param>
             <param name="Email"></param>
             <param name="Password"></param>
+            <param name="UserType"></param>
         </member>
         <member name="M:MarlonApi.Controllers.UserController.GetAll">
             <summary>
@@ -93,12 +94,16 @@
             </summary>
             <param name="Email"></param> 
         </member>
-        <member name="M:MarlonApi.Controllers.UserController.Update(System.Int64,MarlonApi.Models.TodoStudent)">
+        <member name="M:MarlonApi.Controllers.UserController.Update(System.String,System.String,System.String,System.String,System.String,System.String)">
             <summary>
-            Updates a specific Student.
+            Updates a specific user.
             </summary>
-            <param name="id"></param> 
-            <param name="item"></param>
+            <param name="Email"></param>
+            <param name="newName"></param> 
+            <param name="newPhoneNumber"></param>
+            <param name="newEmail"></param>
+            <param name="newPassword"></param>
+            <param name="newUserType"></param>
         </member>
         <member name="M:MarlonApi.Controllers.UserController.Delete(System.Int64)">
             <summary>
