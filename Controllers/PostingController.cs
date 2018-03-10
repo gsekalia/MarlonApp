@@ -11,8 +11,6 @@ using Microsoft.AspNetCore.Cors;
 
 using MarlonApp.DatabaseInteraction;
 
-//using MarlonApi.DatabaseInteraction;
-
 
 namespace MarlonApi.Controllers
 {
@@ -32,10 +30,7 @@ namespace MarlonApi.Controllers
         /// </summary>
         public PostingController(TodoContext context)
         {
-
             _context = context;
-
-
         }
 
 
@@ -53,23 +48,32 @@ namespace MarlonApi.Controllers
         /// <summary>
         /// Creates a Job posting by passing information in the parameters.
         /// </summary>
-        /// <param name="JobName"></param> 
+        /// <param name="JobTitle"></param> 
+        /// <param name="Company"></param>
+        /// <param name="Location"></param>
         /// <param name="Description"></param>
         /// <param name="Keywords"></param>
-        [HttpPost("{JobName}")]
-        public IActionResult CreateJobPosting(string JobName, string Description, string[] Keywords)
+        [HttpPost("{JobTitle}")]
+        public IActionResult CreateJobPosting(string JobTitle, 
+                                              string Company, 
+                                              string Location, 
+                                              string Description, 
+                                              string[] Keywords)
         {
-            string name = JobName;
-            string descr = Description;
+            string name       = JobTitle;
+            string comp       = Company;
+            string loc        = Location;
+            string descr      = Description;
             string[] keywords = Keywords;// new string[] { "ect" };// Keywords;
             DatabaseInteraction dbObj = new DatabaseInteraction();
 
             var posting = new TodoJobPosting
             {
-                JobTitle = name,
+                JobTitle    = name,
+                Company     = comp,
+                Location    = loc,
                 Description = descr,
-                Keywords = keywords // keywords
-
+                Keywords    = keywords // keywords
             };
             dbObj.CreateNewJobPosting(posting);
             return new ObjectResult(posting);
@@ -84,9 +88,7 @@ namespace MarlonApi.Controllers
         public IActionResult GetPostingByName(string Name)
         {
             DatabaseInteraction dbObj = new DatabaseInteraction();
-
             TodoJobPosting posting = dbObj.GetPostingByName(Name);
-
             return new ObjectResult(posting);
         }
     }

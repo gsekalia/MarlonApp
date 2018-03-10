@@ -11,8 +11,6 @@ using Microsoft.AspNetCore.Cors;
 
 using MarlonApp.DatabaseInteraction;
 
-//using MarlonApi.DatabaseInteraction;
-
 
 namespace MarlonApi.Controllers
 {
@@ -34,57 +32,10 @@ namespace MarlonApi.Controllers
 
             _context = context;
 
-            if(_context.TodoItems.Count()==0){
-
-
-            }
+            //if(_context.TodoItems.Count()==0){
+            //}
 
         }
-
-/// <summary>
-/// Creates a new student 
-/// </summary>
-/// <remarks>
-/// Sample request:
-///
-///     POST /student
-///     {
-///        "name": "Student 1",
-///        "address": "address 1",
-///        "email": " student@gmail.com",
-///        "phoneNumber": "334-123-6789",
-///        "bsEducationSchool": "Depaul University",
-///        "bsEducationTitle": "Computer Science",
-///        "msEducationSchool": "DePaul University",
-///        "msEducationTitle": "Game Programming",
-///        "workExperienceCompanyNameOne": "Google",
-///        "workExperienceTitleOne": "Software Developer",
-///        "workExperienceCompanyNameTwo": "Facebook",
-///        "workExperienceTitleTwo": "Software Developer Intern",
-///        "extraCurricularActivitiesOne": " Computer Science Society"
-///     }
-///
-/// </remarks>
-/// <param name="item"></param>
-/// <returns>A newly-created TodoStudent</returns>
-/// <response code="201">Returns the newly-created student</response>
-/// <response code="400">If the item is null</response> 
-[HttpPost]
-[ProducesResponseType(typeof(TodoStudent), 201)]
-[ProducesResponseType(typeof(TodoStudent), 400)]
-public IActionResult Create([FromBody] TodoStudent item)
-{
-    if (item == null)
-    {
-        return BadRequest();
-    }
-
-    _context.TodoItems.Add(item);
-    _context.SaveChanges();
-
-    return CreatedAtRoute("GetTodo", new { id = item.Id }, item);
-}
-
 
         /// <summary>
         /// Creates a student by passing student information in the parameters.
@@ -94,34 +45,35 @@ public IActionResult Create([FromBody] TodoStudent item)
         /// <param name="Email"></param>
         /// <param name="Password"></param>
         /// <param name="UserType"></param>
+        /// <param name="Resume"></param>
         [HttpPost("{Name}")]
-    public IActionResult CreateStudentFromResume(   string Name, 
-                                                    string PhoneNumber, 
-                                                    string Email, 
-                                                    string Password,
-                                                    string UserType)
+    public IActionResult CreateNewStudent(   string Name, 
+                                             string PhoneNumber, 
+                                             string Email, 
+                                             string Password,
+                                             string UserType,
+                                             string[] Resume)
     {
-        string name         = Name;
-        string phoneNumber  = PhoneNumber;
-        string email        = Email;
-        string password     = Password;
-        string userType     = UserType;
-
-        DatabaseInteraction dbObj = new DatabaseInteraction();
-
-        var student =  new TodoStudent {
-              Name          = name,
-              PhoneNumber   = phoneNumber, 
-              Email         = email,
-              Password      = password, 
-              UserType      = userType
-              };
-
-                dbObj.CreateNewCandidate(student);
-                dbObj.PrintCollection();
-
-                _context.TodoItems.Add(dbObj.GetUserByName(name));
-                _context.SaveChanges();
+            //Console.WriteLine("Before building student");
+            string name         = Name;
+            string phoneNumber  = PhoneNumber;
+            string email        = Email;
+            string password     = Password;
+            string userType     = UserType;
+            string[] res        = Resume; // new string[] { "ect" };// Keywords; 
+            Console.WriteLine("Before building student");
+            var student =  new TodoStudent
+            {
+                  Name          = name,
+                  PhoneNumber   = phoneNumber, 
+                  Email         = email,
+                  Password      = password, 
+                  UserType      = userType,
+                  Resume        = res
+            };
+            DatabaseInteraction dbObj = new DatabaseInteraction();
+            Console.WriteLine("Before CreatNewCandidate");
+            dbObj.CreateNewCandidate(student);
             return new ObjectResult(student);
         }
 
@@ -160,27 +112,26 @@ public IActionResult Create([FromBody] TodoStudent item)
         /// <param name="newEmail"></param>
         /// <param name="newPassword"></param>
         /// <param name="newUserType"></param>
+        /// <param name="newResume"></param>
         [HttpPut("{email}")]
         public IActionResult Update(string Email, 
                                     string newName, 
                                     string newPhoneNumber, 
                                     string newEmail, 
                                     string newPassword, 
-                                    string newUserType)
+                                    string newUserType,
+                                    string[] newResume)
         {
-
             //Get the user via email and then update
-
             DatabaseInteraction dbObj = new DatabaseInteraction();
-
-
             var student = new TodoStudent
             {
-                Name = newName,
+                Name        = newName,
                 PhoneNumber = newPhoneNumber,
-                Email = newEmail,
-                Password = newPassword,
-                UserType = newUserType
+                Email       = newEmail,
+                Password    = newPassword,
+                UserType    = newUserType,
+                Resume      = newResume
             };
 
             dbObj.UpdateUserInfo(Email, student);
@@ -189,53 +140,81 @@ public IActionResult Create([FromBody] TodoStudent item)
         }
 
 
-/// <summary>
-/// Deletes a specific Student.
-/// </summary>
-/// <param name="id"></param> 
-[HttpDelete("{id}")]
-public IActionResult Delete(long id)
-{
-    var todo = _context.TodoItems.FirstOrDefault(t => t.Id == id);
-    if (todo == null)
-    {
-        return NotFound();
-    }
+        ///// <summary>
+        ///// Assigns a resume to a specific user.
+        ///// </summary>
+        ///// <param name="Email"></param>
+        ///// <param name="Resume"></param> 
+        //[HttpPut("{Email}")]
+        //public IActionResult AddResume(string Email,
+        //                            string[] Resume)
+        //{
+        //    string[] res = Resume;
+        //    //Get the user via email and then update
+        //    DatabaseInteraction dbObj = new DatabaseInteraction();
+        //    TodoStudent stu = dbObj.GetUserByEmail(Email);
+        //    var student = new TodoStudent
+        //    {
+        //        Name        = stu.Name,       
+        //        PhoneNumber = stu.PhoneNumber,
+        //        Email       = stu.Email,      
+        //        Password    = stu.Password,   
+        //        UserType    = stu.UserType,
+        //        Resume      = res
+        //    };
 
-    _context.TodoItems.Remove(todo);
-    _context.SaveChanges();
-    return new NoContentResult();
-}
+        //    dbObj.UpdateUserInfo(Email, student);
+
+        //    return new NoContentResult();
+        //}
+
+//        /// <summary>
+//        /// Deletes a specific Student.
+//        /// </summary>
+//        /// <param name="id"></param> 
+//        [HttpDelete("{id}")]
+//public IActionResult Delete(long id)
+//{
+//    var todo = _context.TodoItems.FirstOrDefault(t => t.Id == id);
+//    if (todo == null)
+//    {
+//        return NotFound();
+//    }
+
+//    _context.TodoItems.Remove(todo);
+//    _context.SaveChanges();
+//    return new NoContentResult();
+//}
 
 
-[HttpPost("UploadFiles")]
-public async Task<IActionResult> Post(List<IFormFile> files)
-{
-    long size = files.Sum(f => f.Length);
+//[HttpPost("UploadFiles")]
+//public async Task<IActionResult> Post(List<IFormFile> files)
+//{
+//    long size = files.Sum(f => f.Length);
 
-    // full path to file in temp location
-    var filePath =  System.IO.Path.GetTempFileName();
+//    // full path to file in temp location
+//    var filePath =  System.IO.Path.GetTempFileName();
 
-    foreach (var formFile in files)
-    {
-        if (formFile.Length > 0)
-        {
-            using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                await formFile.CopyToAsync(stream);
-            }
-        }
-    }
+//    foreach (var formFile in files)
+//    {
+//        if (formFile.Length > 0)
+//        {
+//            using (var stream = new FileStream(filePath, FileMode.Create))
+//            {
+//                await formFile.CopyToAsync(stream);
+//            }
+//        }
+//    }
 
-    // _context.TodoItems.Add(new TodoStudent { Name = "hotel", Address = "10322 asdasdas", Email = "marlon@gmail.com", PhoneNumber = "773-890-1234", BSEducationSchool = "Depaul University" , BSEducationTitle = "Computer Science", WorkExperienceCompanyNameOne = "FaceBook", WorkExperienceTitleOne = "Developer", ExtraCurricularActivitiesOne = "Programming" });
-    //_context.SaveChanges();
+//    // _context.TodoItems.Add(new TodoStudent { Name = "hotel", Address = "10322 asdasdas", Email = "marlon@gmail.com", PhoneNumber = "773-890-1234", BSEducationSchool = "Depaul University" , BSEducationTitle = "Computer Science", WorkExperienceCompanyNameOne = "FaceBook", WorkExperienceTitleOne = "Developer", ExtraCurricularActivitiesOne = "Programming" });
+//    //_context.SaveChanges();
 
-    // process uploaded files
-    // Don't rely on or trust the FileName property without validation.
+//    // process uploaded files
+//    // Don't rely on or trust the FileName property without validation.
 
-    return Ok(new { count = files.Count, size, filePath});
+//    return Ok(new { count = files.Count, size, filePath});
 
-    }
+//    }
 
     }
 }
