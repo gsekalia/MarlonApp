@@ -19,7 +19,7 @@
             Gets All Job Postings
             </summary>
         </member>
-        <member name="M:MarlonApi.Controllers.PostingController.CreateJobPosting(System.String,System.String,System.String,System.String,System.String[])">
+        <member name="M:MarlonApi.Controllers.PostingController.CreateJobPosting(System.String,System.String,System.String,System.String,System.String[],System.String[][])">
             <summary>
             Creates a Job posting by passing information in the parameters.
             </summary>
@@ -28,6 +28,7 @@
             <param name="Location"></param>
             <param name="Description"></param>
             <param name="Keywords"></param>
+            <param name="UserAndScore"></param>
         </member>
         <member name="M:MarlonApi.Controllers.PostingController.GetPostingByName(System.String)">
             <summary>
