@@ -69,14 +69,6 @@ namespace MarlonApi.Controllers
             string[] keywords = Keywords;// new string[] { "ect" };// Keywords;
             string[][] userAndScore = UserAndScore;//= new string[UserAndScore.Length, 2];// = UserAndScore;// new string[] { "ect" };// Keywords;
 
-            //for(int i = 0; i < UserAndScore.Length; i++)
-            //{
-            //    var currComb = UserAndScore[i];
-            //    for (int j = 0; j < currComb.Length; j++)
-            //    {
-            //        userAndScore[i, j] = currComb[j];
-            //    }
-            //}
             DatabaseInteraction dbObj = new DatabaseInteraction();
 
             var posting = new TodoJobPosting
@@ -104,6 +96,37 @@ namespace MarlonApi.Controllers
             TodoJobPosting posting = dbObj.GetPostingByName(Name);
             return new ObjectResult(posting);
         }
+
+
+        /// <summary>
+        /// Add a user to a given jobPosting.
+        /// </summary>
+        /// <param name="JobTitle"></param> 
+        /// <param name="Email"></param>
+        [HttpPost("{Email}")]
+        public IActionResult CreateJobPosting(string JobTitle,
+                                              string Email
+                                                            )
+        {
+            DatabaseInteraction dbObj = new DatabaseInteraction();
+
+            TodoJobPosting  posting  = dbObj.GetPostingByName(JobTitle);
+            TodoStudent stu = dbObj.GetUserByEmail(Email);
+            dbObj.SubmitResumeToJob(posting, stu );
+
+            //var posting = new TodoJobPosting
+            //{
+            //    JobTitle = title,
+            //    Company = comp,
+            //    Location = loc,
+            //    Description = descr,
+            //    Keywords = keywords, // keywords
+            //    UserAndScore = userAndScore
+            //};
+            dbObj.CreateNewJobPosting(posting);
+            return new ObjectResult(posting);
+        }
+
     }
 
 }

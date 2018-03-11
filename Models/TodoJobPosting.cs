@@ -41,15 +41,6 @@ namespace MarlonApi.Models
 
         public BsonDocument PostingToBson()
         {
-            //string[][] usScr = new string[UserAndScore.Length][];
-
-            //for(int i = 0; i < UserAndScore.Length; i++)
-            //{
-            //    usScr[i] = new string[2];
-
-
-            //}
-
             return new BsonDocument
             {
                 {"JobTitle"         , this.JobTitle                  },

@@ -161,32 +161,6 @@ namespace MarlonApp.DatabaseInteraction
         }
 
         //-----------------------GET METHODS---------------------------------------------------------------
-
-        //public TodoStudent GetUserByName(String name)
-        //{
-        //    var collection = this.db.GetCollection<BsonDocument>("candidate");
-
-        //    var search = new BsonDocument("Name", name);
-        //    BsonDocument found;
-        //    try
-        //    {
-        //        found = collection.Find(search).First();
-        //    }
-        //    catch (InvalidOperationException e)
-        //    {
-        //        found = new BsonDocument
-        //                {
-        //                    {"Name"         , "null" },
-        //                    {"PhoneNumber"  , "null" },
-        //                    {"Email"        , "null" },
-        //                    {"Password"     , "null" },
-        //                    {"UserType"     , "null" },
-        //                    {"Resume"       , new BsonArray("")   }
-        //                };
-        //    }
-        //    return BsonToUser(found);               
-        //}
-
         public TodoStudent GetUserByEmail(String email)
         {
             var collection = this.db.GetCollection<BsonDocument>("candidate");
@@ -266,7 +240,7 @@ namespace MarlonApp.DatabaseInteraction
             TodoStudent stu = GetUserByEmail(email);
         
             newStu = newStu.DefaultToExisting(stu);
-            var collection = db.GetCollection<BsonDocument>("candidate");
+            var collection = db.GetCollection<BsonDocument>("JobPosting");
             var doc = newStu.UserToBson();
             var search = new BsonDocument("Email", email);
 
@@ -276,20 +250,50 @@ namespace MarlonApp.DatabaseInteraction
             return newStu;
         }
 
-        public TodoJobPosting UpdatePostingInfo(string title, TodoJobPosting newPosting)
+        public TodoJobPosting SubmitResumeToJob(TodoJobPosting posting, TodoStudent stu)
         {
-            TodoJobPosting oldPosting = GetPostingByName(title);
-            newPosting = newPosting.DefaultToExisting(oldPosting);
+            TodoJobPosting newPosting = posting.DefaultToNone();
+            newPosting = newPosting.DefaultToExisting(posting);
 
-            var collection = db.GetCollection<BsonDocument>("candidate");
-            var doc =newPosting.PostingToBson();
-            var search = new BsonDocument("JobTitle", title);
+            var oldUserScore = posting.UserAndScore;
+            int oldLen = posting.UserAndScore.Length;
+            string[][] newUserScores = new string[oldLen + 1][];
 
-            BsonDocument found;
-            found = collection.Find(search).First();
-            collection.ReplaceOne(found, doc);
+            //transfer over existing submitals and appending the newest one
+            for (int i = 0; i < oldLen; i++)
+            {
+                newUserScores[i] = new string[2];
+
+                string[] currComb = oldUserScore[i];
+                Console.WriteLine(currComb[0]);
+                newUserScores[i][0] = currComb[0].ToString();
+                try
+                {
+                    newUserScores[i][1] = currComb[1].ToString();
+                }
+                catch (IndexOutOfRangeException e)
+                {
+                    newUserScores[i][1] = "0";
+                }
+            }
+            newUserScores[oldLen] = new string[2];
+            newUserScores[oldLen][0] = stu.Email;
+            newUserScores[oldLen][1] = "0";
+
+            newPosting.UserAndScore = newUserScores;
+
+            var collection = db.GetCollection<BsonDocument>("JobPosting");     
+            var newDoc = newPosting.PostingToBson();
+            var search = posting.PostingToBson();
+
+            //BsonDocument found;
+          //  found = collection.Find(search).First();
+            collection.ReplaceOne(search, newDoc);
             return newPosting;
         }
+
+
+
 
         //-------------------------------------------AUTHENTICATION---------------------------------------------------------------------
         //public bool AuthenticateUserLogin(String name, String password)
