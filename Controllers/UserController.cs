@@ -114,8 +114,8 @@ namespace MarlonApi.Controllers
         /// <param name="newPassword"></param>
         /// <param name="newUserType"></param>
         /// <param name="newResume"></param>
-       // [HttpPut("{Email}", Name = "UpdateUser")]
-        [HttpGet("UpdateUser")]
+        [HttpPut("{Email}", Name = "UpdateUser")]
+       // [HttpPost("UpdateUser")]
         public IActionResult Update(string Email, 
                                     string newName, 
                                     string newPhoneNumber, 

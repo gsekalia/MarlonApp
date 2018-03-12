@@ -104,7 +104,7 @@ namespace MarlonApi.Controllers
         /// </summary>
         /// <param name="Email"></param> 
         /// <param name="JobTitle"></param>
-        [HttpGet("{Email}", Name = "AddResume")]
+        [HttpPut("{Email}", Name = "AddResume")]
         public IActionResult AddResumeToPosting(string Email,
                                                 string JobTitle
                                                             )
