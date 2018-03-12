@@ -32,23 +32,25 @@ namespace MarlonApi.FileReader
             return point;
         }
 
-        public static int ReadandAssignVal(string resStr, string[] keywords)
+        public static int ReadandAssignVal(string[] resStr, string[] keywords)
         {
             int score = 0;
-            string word = "";
+           // string word = "";
             int resLen = resStr.Length;
             for (int i = 0; i < resLen; i++ )
             {
-                char currChar = resStr[i];
-                if (!currChar.Equals(" ") && !currChar.Equals(".") && !currChar.Equals(",") && !currChar.Equals("/"))
-                    word += resStr[i];
-                else
-                {
-                    score += CheckWordAgainstKeywords(word, keywords);                
-                }
+                //char currChar = resStr[i];
+                //if (!currChar.Equals(" ") && !currChar.Equals(".") && !currChar.Equals(",") && !currChar.Equals("/"))
+                //    word += resStr[i];
+                //else
+                //{
+                //    score += CheckWordAgainstKeywords(word, keywords);                
+                //}
+                    score += CheckWordAgainstKeywords(resStr[i], keywords);                
+
 
             }
-           
+
             return score;
         }
 

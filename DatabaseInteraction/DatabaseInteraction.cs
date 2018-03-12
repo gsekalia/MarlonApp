@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using MarlonApi.FileReader;
 using MongoDB.Bson;
 using MongoDB.Driver;
 //using System.InvalidOperationException;
@@ -278,7 +278,9 @@ namespace MarlonApp.DatabaseInteraction
             }
             newUserScores[oldLen] = new string[2];
             newUserScores[oldLen][0] = stu.Email;
-            newUserScores[oldLen][1] = "0";
+            int score = FileReader.ReadandAssignVal(stu.Resume, posting.Keywords);
+            newUserScores[oldLen][1] = score.ToString();
+            //newUserScores[oldLen][1] = "0";
 
             newPosting.UserAndScore = newUserScores;
 
@@ -292,40 +294,6 @@ namespace MarlonApp.DatabaseInteraction
             return newPosting;
         }
 
-
-
-
-        //-------------------------------------------AUTHENTICATION---------------------------------------------------------------------
-        //public bool AuthenticateUserLogin(String name, String password)
-        //{
-        //    var collection = db.GetCollection<BsonDocument>("candidate");
-
-        //    var search = new BsonDocument
-        //    {
-        //        {"name"     , name      },
-        //        {"password" , password  }
-        //    };
-
-        //    BsonDocument found = null;
-        //    try
-        //    {
-        //           found = collection.Find(search).First();
-        //    }
-        //    catch( System.InvalidOperationException e)
-        //    {
-                
-        //    }
-        //    bool result = false;
-        //    string debugMsg = "No User Found";
-        //    if (found != null)
-        //    {
-        //        debugMsg = "Found User";
-        //        result = true;
-        //    }
-
-        //    Console.WriteLine(debugMsg);
-        //    return result;
-        //}
     }
 
 
