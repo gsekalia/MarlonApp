@@ -92,7 +92,7 @@ namespace MarlonApp.DatabaseInteraction
             {
                 keywords[i] = k[i].ToString();
             }
-            var s = doc.GetValue("UserAndScore").AsBsonArray.ToArray();
+            var s           = doc.GetValue("UserAndScore").AsBsonArray.ToArray();
             len = s.Length;
             string[][] userAndScore = new string[len][];
 
@@ -181,7 +181,7 @@ namespace MarlonApp.DatabaseInteraction
                             {"Email"        , "null" },
                             {"Password"     , "null" },
                             {"UserType"     , "null" },
-                            {"Resume"       , new BsonArray("")   }
+                            {"Resume"       , new BsonArray(new string[1])   }
                         };               
             }
             return BsonToUser(found);
@@ -200,6 +200,8 @@ namespace MarlonApp.DatabaseInteraction
             }
             catch (InvalidOperationException e)
             {
+
+                var emptyArr = new BsonArray(new string[1][]);
                 found = new BsonDocument
                         {
                             {"JobTitle"         , "null"            },
@@ -207,7 +209,7 @@ namespace MarlonApp.DatabaseInteraction
                             {"Location"         , "null"            },
                             {"JobDescription"   , "null"            },
                             {"Keywords"         , new BsonArray("") },
-                            {"UserAndScore"     , new BsonArray()   },
+                            {"UserAndScore"     , emptyArr          },
 
                         };
             }
@@ -228,7 +230,7 @@ namespace MarlonApp.DatabaseInteraction
         {
             stu.DefaultToNone();
             var collection = db.GetCollection<BsonDocument>("candidate");
-            //var doc = UserToBson(stu);
+
             var doc = stu.UserToBson();
             collection.InsertOne(doc);
         }
@@ -240,7 +242,7 @@ namespace MarlonApp.DatabaseInteraction
             TodoStudent stu = GetUserByEmail(email);
         
             newStu = newStu.DefaultToExisting(stu);
-            var collection = db.GetCollection<BsonDocument>("JobPosting");
+            var collection = db.GetCollection<BsonDocument>("candidate");
             var doc = newStu.UserToBson();
             var search = new BsonDocument("Email", email);
 
@@ -248,6 +250,21 @@ namespace MarlonApp.DatabaseInteraction
             found = collection.Find(search).First();
             collection.ReplaceOne(found, doc);
             return newStu;
+        }
+        public TodoJobPosting UpdatePostingInfo(string name, TodoJobPosting newPost)
+        {
+            //TodoStudent stu = GetUserByEmail(email);
+            TodoJobPosting posting = GetPostingByName(name); 
+
+            newPost = newPost.DefaultToExisting(posting);
+            var collection = db.GetCollection<BsonDocument>("JobPosting");
+            var doc = newPost.PostingToBson();
+            var search = new BsonDocument("JobTitle", name);
+
+            BsonDocument found;
+            found = collection.Find(search).First();
+            collection.ReplaceOne(found, doc);
+            return newPost;
         }
 
         public TodoJobPosting SubmitResumeToJob(TodoJobPosting posting, TodoStudent stu)
@@ -280,18 +297,36 @@ namespace MarlonApp.DatabaseInteraction
             newUserScores[oldLen][0] = stu.Email;
             int score = FileReader.ReadandAssignVal(stu.Resume, posting.Keywords);
             newUserScores[oldLen][1] = score.ToString();
-            //newUserScores[oldLen][1] = "0";
+
 
             newPosting.UserAndScore = newUserScores;
 
             var collection = db.GetCollection<BsonDocument>("JobPosting");     
             var newDoc = newPosting.PostingToBson();
-            var search = posting.PostingToBson();
 
-            //BsonDocument found;
-          //  found = collection.Find(search).First();
-            collection.ReplaceOne(search, newDoc);
+            var search = new BsonDocument("JobTitle", posting.JobTitle);
+
+            BsonDocument found;
+            try
+            {
+                found = collection.Find(search).First();
+            }
+            catch (InvalidOperationException e)
+            {
+                found = new BsonDocument
+                        {
+                            {"JobTitle"         , "null"            },
+                            {"Company"          , "null"            },
+                            {"Location"         , "null"            },
+                            {"JobDescription"   , "null"            },
+                            {"Keywords"         , new BsonArray("") },
+                            {"UserAndScore"     , new BsonArray()   },
+                        };
+            }
+            collection.ReplaceOne(found, newDoc);
             return newPosting;
+
+
         }
 
     }

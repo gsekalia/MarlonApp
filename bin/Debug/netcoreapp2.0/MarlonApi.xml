@@ -36,12 +36,12 @@
             </summary>
             <param name="Name"></param> 
         </member>
-        <member name="M:MarlonApi.Controllers.PostingController.CreateJobPosting(System.String,System.String)">
+        <member name="M:MarlonApi.Controllers.PostingController.AddResumeToPosting(System.String,System.String)">
             <summary>
             Add a user to a given jobPosting.
             </summary>
-            <param name="JobTitle"></param> 
-            <param name="Email"></param>
+            <param name="Email"></param> 
+            <param name="JobTitle"></param>
         </member>
         <member name="T:MarlonApi.Controllers.UserController">
             <summary>

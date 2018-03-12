@@ -82,6 +82,7 @@ namespace MarlonApi.Controllers
         /// Gets All Students Information
         /// </summary>
         [HttpGet]
+       // [HttpGet(Name = "GetAll")]
         public IEnumerable<TodoStudent> GetAll()
         {
             DatabaseInteraction dbObj = new DatabaseInteraction();
@@ -113,7 +114,8 @@ namespace MarlonApi.Controllers
         /// <param name="newPassword"></param>
         /// <param name="newUserType"></param>
         /// <param name="newResume"></param>
-        [HttpPut("{email}")]
+       // [HttpPut("{Email}", Name = "UpdateUser")]
+        [HttpGet("UpdateUser")]
         public IActionResult Update(string Email, 
                                     string newName, 
                                     string newPhoneNumber, 

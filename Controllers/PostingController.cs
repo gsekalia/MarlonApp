@@ -54,7 +54,7 @@ namespace MarlonApi.Controllers
         /// <param name="Description"></param>
         /// <param name="Keywords"></param>
         /// <param name="UserAndScore"></param>
-        [HttpPost("{JobTitle}")]
+        [HttpPost("{JobTitle}", Name = "AddPosting")]
         public IActionResult CreateJobPosting(string JobTitle,
                                               string Company,
                                               string Location,
@@ -62,6 +62,7 @@ namespace MarlonApi.Controllers
                                               string[] Keywords,
                                               string[][] UserAndScore)
         {
+            Console.WriteLine("Inside CreateJobPosting");
             string name       = JobTitle;
             string comp       = Company;
             string loc        = Location;
@@ -101,11 +102,11 @@ namespace MarlonApi.Controllers
         /// <summary>
         /// Add a user to a given jobPosting.
         /// </summary>
-        /// <param name="JobTitle"></param> 
-        /// <param name="Email"></param>
-        [HttpPost("{Email}")]
-        public IActionResult CreateJobPosting(string JobTitle,
-                                              string Email
+        /// <param name="Email"></param> 
+        /// <param name="JobTitle"></param>
+        [HttpGet("{Email}", Name = "AddResume")]
+        public IActionResult AddResumeToPosting(string Email,
+                                                string JobTitle
                                                             )
         {
             DatabaseInteraction dbObj = new DatabaseInteraction();
@@ -114,16 +115,6 @@ namespace MarlonApi.Controllers
             TodoStudent stu = dbObj.GetUserByEmail(Email);
             dbObj.SubmitResumeToJob(posting, stu );
 
-            //var posting = new TodoJobPosting
-            //{
-            //    JobTitle = title,
-            //    Company = comp,
-            //    Location = loc,
-            //    Description = descr,
-            //    Keywords = keywords, // keywords
-            //    UserAndScore = userAndScore
-            //};
-            dbObj.CreateNewJobPosting(posting);
             return new ObjectResult(posting);
         }
 
